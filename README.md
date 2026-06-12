@@ -173,7 +173,15 @@ chsh -s /opt/homebrew/bin/fish
 
 **Icons show as boxes/question marks** — the Nerd Font isn't active. Run `fc-cache -f`, restart kitty, and confirm `kitty +list-fonts | grep -i jetbrains` shows the font.
 
-**Prompt looks plain after install** — tide variables didn't apply. Run `fish scripts/tide-config.fish` from the repo (clone lives at `~/.local/share/fish-dotfiles` if you used the one-liner), then `exec fish`.
+**Prompt looks plain / custom prompt missing** — tide didn't install or its theme didn't apply. Fix from inside fish:
+
+```fish
+fisher install ilancosman/tide@v6
+curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/main/scripts/tide-config.fish | fish
+exec fish
+```
+
+Check `fisher list` to see which plugins are actually installed.
 
 **`done` notifications don't appear** — you need a notification daemon (`dunst`, `mako`, or your DE's built-in). `libnotify` only provides the client side.
 

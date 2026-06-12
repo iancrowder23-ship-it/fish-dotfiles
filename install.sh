@@ -83,16 +83,25 @@ fc-cache -f >/dev/null
 ok "Font cache updated"
 
 # ── 6. Install fisher + plugins (tide, autopair, done, puffer)─
+# Robust non-interactive method: drop fisher.fish into the autoload
+# dir first, THEN run `fisher update` (the pipe-to-source bootstrap
+# is unreliable in scripts — see fisher issues #639 / #644).
 info "Installing fisher and plugins..."
-fish -c '
-    curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
-    and fisher update
-' || die "fisher install failed"
+mkdir -p "$HOME/.config/fish/functions" "$HOME/.config/fish/completions"
+curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
+    -o "$HOME/.config/fish/functions/fisher.fish" \
+    || die "Could not download fisher.fish — check network access to raw.githubusercontent.com"
+curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/completions/fisher.fish \
+    -o "$HOME/.config/fish/completions/fisher.fish" || true
+# </dev/null so fish can't swallow the rest of this script when piped via curl|bash
+if ! fish -c 'fisher update' </dev/null; then
+    die "fisher update failed — see the error above, then retry with: fish -c 'fisher update'"
+fi
 ok "Plugins installed"
 
 # ── 7. Restore tide prompt theme (exact export from macOS) ───
 info "Applying tide prompt configuration..."
-fish "$SRC/scripts/tide-config.fish"
+fish "$SRC/scripts/tide-config.fish" </dev/null
 ok "Tide theme applied"
 
 # ── 8. Set fish as default shell ─────────────────────────────

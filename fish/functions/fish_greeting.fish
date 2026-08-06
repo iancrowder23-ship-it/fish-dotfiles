@@ -1,6 +1,16 @@
 function fish_greeting
-    # Typewriter animation — monochrome green gradient
-    set -l colors 0B3D1A 145C29 17C93C 1FE84C 33FF66 4DFF80 66FF99 80FF9E 66FF99 4DFF80 33FF66 1FE84C 17C93C 145C29 0B3D1A D4D4D4
+    # Typewriter animation — gradient set by the active theme
+    # (fish_greeting_gradient / fish_greeting_accent, universal
+    # vars set in fish/themes/<name>.fish → conf.d/00-theme.fish)
+    set -l colors $fish_greeting_gradient
+    if test (count $colors) -eq 0
+        set colors CBA6F7 89B4FA 34D399   # fallback if theme not applied yet
+    end
+    set -l accent $fish_greeting_accent
+    if test -z "$accent"
+        set accent $colors[1]
+    end
+
     set -l msg "  ❯ Welcome back, Ian ❯  "
     set -l len (string length $msg)
 
@@ -12,11 +22,11 @@ function fish_greeting
     end
     printf "%s\n" (set_color normal)
 
-    # Version info in dim green
+    # Version info in the theme's accent color
     set -l kitty_ver (kitty --version 2>/dev/null | string match -r '\d+\.\d+\.\d+' | head -1)
     set -l fish_ver  (fish --version 2>/dev/null | string match -r '\d+\.\d+\.\d+' | head -1)
     printf "%s  kitty %s  •  fish %s%s\n" \
-        (set_color 17C93C) \
+        (set_color $accent) \
         $kitty_ver \
         $fish_ver \
         (set_color normal)

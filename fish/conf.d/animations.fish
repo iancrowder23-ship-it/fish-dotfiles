@@ -30,22 +30,7 @@ function _cursor_postexec --on-event fish_postexec
     printf '\e[5 q'
 end
 
-# ── Syntax highlighting — Mono-Green (grayscale + green accent) ─
-set -g fish_color_command          33FF66   # commands       → bright green
-set -g fish_color_param            D4D4D4   # arguments      → light gray
-set -g fish_color_option           A0A0A0   # flags/options  → mid gray
-set -g fish_color_keyword          17C93C   # keywords       → green
-set -g fish_color_builtin          F2F2F2   # builtins       → near-white
-set -g fish_color_operator         9EF5B3   # operators      → pale green
-set -g fish_color_redirection      C7C7C7   # redirects      → gray
-set -g fish_color_end              33FF66   # semicolons     → green
-set -g fish_color_error            F2F2F2   # errors         → bold white (stands out on dark)
-set -g fish_color_comment          4A4A4A   # comments       → dim gray
-set -g fish_color_quote            9EF5B3   # strings        → pale green
-set -g fish_color_autosuggestion   4A4A4A   # ghost text     → dim gray
-set -g fish_color_search_match     --background=17C93C
-set -g fish_color_selection        --background=17C93C
-set -g fish_pager_color_prefix     33FF66
-set -g fish_pager_color_completion D4D4D4
-set -g fish_pager_color_description 4A4A4A
-set -g fish_pager_color_progress   33FF66
+# ── Syntax highlighting / colors ────────────────────────────────
+# Colors live in fish/themes/<name>.fish (deployed as
+# conf.d/00-theme.fish by install.sh, loads before this file).
+# See that file for fish_color_*, git-prompt, and greeting colors.

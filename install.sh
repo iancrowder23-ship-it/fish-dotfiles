@@ -36,11 +36,13 @@ sudo pacman -S --needed --noconfirm \
     eza \
     bind \
     libnotify \
+    fastfetch \
     ttf-jetbrains-mono-nerd \
     noto-fonts-emoji
 ok "Packages installed"
 # bind        → provides `dig` (used by the myip alias)
 # libnotify   → desktop notifications for the `done` fish plugin
+# fastfetch   → system info banner shown on every new shell
 # ttf-jetbrains-mono-nerd → the font kitty.conf uses
 
 # ── 2. Get the repo ──────────────────────────────────────────
@@ -76,6 +78,11 @@ info "Deploying fish config..."
 mkdir -p "$HOME/.config/fish"
 cp -r "$SRC/fish/." "$HOME/.config/fish/"
 ok "fish config in place"
+
+info "Deploying fastfetch config..."
+mkdir -p "$HOME/.config/fastfetch"
+cp "$SRC/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
+ok "fastfetch config in place"
 
 # ── 5. Refresh font cache ────────────────────────────────────
 info "Refreshing font cache..."

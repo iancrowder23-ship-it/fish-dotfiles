@@ -29,14 +29,14 @@ if status is-interactive
     set -g __fish_git_prompt_showstashstate          1
     set -g __fish_git_prompt_showupstream            informative
 
-    # Catppuccin Mocha git colors
-    set -g __fish_git_prompt_color_branch          brmagenta
+    # Mono-Green git colors
+    set -g __fish_git_prompt_color_branch          brgreen
     set -g __fish_git_prompt_color_upstream_ahead  brgreen
-    set -g __fish_git_prompt_color_upstream_behind brred
-    set -g __fish_git_prompt_color_dirty           bryellow
+    set -g __fish_git_prompt_color_upstream_behind brblack
+    set -g __fish_git_prompt_color_dirty           white
     set -g __fish_git_prompt_color_staged          brgreen
-    set -g __fish_git_prompt_color_invalidstate    brred
-    set -g __fish_git_prompt_color_untrackedfiles  brcyan
+    set -g __fish_git_prompt_color_invalidstate    brblack
+    set -g __fish_git_prompt_color_untrackedfiles  white
 
     # Git symbols
     set -g __fish_git_prompt_char_dirtystate       '✗'

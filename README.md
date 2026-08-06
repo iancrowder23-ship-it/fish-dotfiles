@@ -1,6 +1,6 @@
 # fish-dotfiles
 
-Complete kitty + fish terminal setup — **Catppuccin Mocha** theme, **JetBrainsMono Nerd Font**, **tide v6** prompt, animated cursor, typewriter greeting. Exported from macOS, fully portable to Arch Linux with a one-command installer.
+Complete kitty + fish terminal setup — **Mono-Green** theme (monochrome grayscale with a single green accent), **JetBrainsMono Nerd Font**, **tide v6** prompt, animated cursor, typewriter greeting, **fastfetch** on every new shell. Exported from macOS, fully portable to Arch Linux with a one-command installer.
 
 ---
 
@@ -12,8 +12,8 @@ curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/
 
 That's it. The script does everything:
 
-1. Installs packages via pacman: `kitty`, `fish`, `git`, `curl`, `eza`, `bind` (for `dig`), `libnotify` (for notifications), `ttf-jetbrains-mono-nerd`, `noto-fonts-emoji`
-2. Backs up any existing `~/.config/kitty` and `~/.config/fish` (timestamped `.bak-` folders)
+1. Installs packages via pacman: `kitty`, `fish`, `git`, `curl`, `eza`, `bind` (for `dig`), `libnotify` (for notifications), `fastfetch`, `ttf-jetbrains-mono-nerd`, `noto-fonts-emoji`
+2. Backs up any existing `~/.config/kitty`, `~/.config/fish`, and `~/.config/fastfetch` (timestamped `.bak-` folders)
 3. Deploys all configs from this repo
 4. Refreshes the font cache
 5. Installs [fisher](https://github.com/jorgebucaran/fisher) and all plugins
@@ -39,9 +39,11 @@ fish-dotfiles/
 │   ├── conf.d/
 │   │   └── animations.fish     cursor morph animation, exit-status flash, syntax colors
 │   └── functions/
-│       ├── fish_greeting.fish  typewriter welcome banner (purple→orange gradient)
+│       ├── fish_greeting.fish  typewriter welcome banner (mono-green gradient) + fastfetch
 │       ├── mkcd.fish           mkdir + cd in one
 │       └── reload.fish         reload fish config
+├── fastfetch/
+│   └── config.jsonc            minimal mono-green fastfetch layout
 └── scripts/
     └── tide-config.fish        exact tide v6 theme export — run after fisher install
 ```
@@ -52,7 +54,7 @@ fish-dotfiles/
 
 ### Kitty terminal
 
-- **Theme**: Catppuccin Mocha with 0.92 background opacity + blur (frosted glass)
+- **Theme**: Mono-Green — monochrome grayscale (near-black background, light-gray text) with green reserved as the single accent color (cursor, prompt, git, success states)
 - **Font**: JetBrainsMono Nerd Font Mono, 13.5pt
 - **Cursor**: animated beam with trail (`cursor_trail 3`)
 - **Tabs**: powerline-style tab bar (round separators, bottom edge)
@@ -89,7 +91,7 @@ fish-dotfiles/
 
 - Left: OS icon · path · git status · prompt character
 - Right: exit status · command duration · user@host · jobs · node/python/java/ruby versions · time
-- Custom purple/orange Catppuccin accent colors (full theme in `scripts/tide-config.fish`)
+- Mono-Green accent theme: grayscale surfaces, green branch/status/prompt highlights (full theme in `scripts/tide-config.fish`)
 
 **Plugins** (managed by fisher, listed in `fish_plugins`):
 
@@ -103,10 +105,14 @@ fish-dotfiles/
 **Animations** (`conf.d/animations.fish`):
 
 - Cursor morphs beam → underline → block when you hit Enter, back to blinking beam after
-- Green `✓` / red `✗ exit N` flash after every command
-- Catppuccin Mocha syntax highlighting (mauve commands, peach args, orange flags)
+- Green `✓` / white `✗ exit N` flash after every command
+- Mono-Green syntax highlighting (green commands, gray args, pale-green strings)
 
-**Greeting** — typewriter animation: *"❯ Welcome back, Ian ❯"* in a purple→orange gradient, plus kitty/fish version info.
+**Greeting** — typewriter animation: *"❯ Welcome back, Ian ❯"* in a monochrome green gradient, kitty/fish version info, followed by **fastfetch** system info.
+
+### fastfetch
+
+Runs automatically at the end of `fish_greeting` (every new interactive shell). Config lives at `fastfetch/config.jsonc` → deployed to `~/.config/fastfetch/config.jsonc`, styled to match the Mono-Green theme (green key labels, white values, small ASCII logo). Shows OS, host, kernel, uptime, packages, shell, terminal, CPU, GPU, memory, disk, local IP, and a color swatch bar.
 
 ### Aliases
 

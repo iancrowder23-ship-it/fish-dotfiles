@@ -1,6 +1,6 @@
 function fish_greeting
-    # Typewriter animation in purple → orange gradient
-    set -l colors CBA6F7 B794F4 A78BFA 9333EA 7C3AED 8B5CF6 A78BFA C084FC E879F9 FAB387 FB923C F97316 EA580C F97316 FB923C FAB387
+    # Typewriter animation — monochrome green gradient
+    set -l colors 0B3D1A 145C29 17C93C 1FE84C 33FF66 4DFF80 66FF99 80FF9E 66FF99 4DFF80 33FF66 1FE84C 17C93C 145C29 0B3D1A D4D4D4
     set -l msg "  ❯ Welcome back, Ian ❯  "
     set -l len (string length $msg)
 
@@ -12,12 +12,17 @@ function fish_greeting
     end
     printf "%s\n" (set_color normal)
 
-    # Version info in muted purple
+    # Version info in dim green
     set -l kitty_ver (kitty --version 2>/dev/null | string match -r '\d+\.\d+\.\d+' | head -1)
     set -l fish_ver  (fish --version 2>/dev/null | string match -r '\d+\.\d+\.\d+' | head -1)
     printf "%s  kitty %s  •  fish %s%s\n" \
-        (set_color 6D28D9) \
+        (set_color 17C93C) \
         $kitty_ver \
         $fish_ver \
         (set_color normal)
+
+    # ── fastfetch on every new shell ───────────────────────────
+    if command -q fastfetch
+        fastfetch
+    end
 end

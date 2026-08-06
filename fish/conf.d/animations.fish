@@ -30,22 +30,22 @@ function _cursor_postexec --on-event fish_postexec
     printf '\e[5 q'
 end
 
-# ── Syntax highlighting — Catppuccin Mocha / purple+orange ─────
-set -g fish_color_command          CBA6F7   # commands       → mauve
-set -g fish_color_param            FAB387   # arguments      → peach
-set -g fish_color_option           F97316   # flags/options  → orange
-set -g fish_color_keyword          F38BA8   # keywords       → red/pink
-set -g fish_color_builtin          89B4FA   # builtins       → blue
-set -g fish_color_operator         94E2D5   # operators      → teal
-set -g fish_color_redirection      F9E2AF   # redirects      → yellow
-set -g fish_color_end              A6E3A1   # semicolons     → green
-set -g fish_color_error            F38BA8   # errors         → red
-set -g fish_color_comment          6C7086   # comments       → surface2
-set -g fish_color_quote            A6E3A1   # strings        → green
-set -g fish_color_autosuggestion   585B70   # ghost text     → surface0
-set -g fish_color_search_match     --background=6D28D9
-set -g fish_color_selection        --background=6D28D9
-set -g fish_pager_color_prefix     CBA6F7
-set -g fish_pager_color_completion FAB387
-set -g fish_pager_color_description 6C7086
-set -g fish_pager_color_progress   CBA6F7
+# ── Syntax highlighting — Mono-Green (grayscale + green accent) ─
+set -g fish_color_command          33FF66   # commands       → bright green
+set -g fish_color_param            D4D4D4   # arguments      → light gray
+set -g fish_color_option           A0A0A0   # flags/options  → mid gray
+set -g fish_color_keyword          17C93C   # keywords       → green
+set -g fish_color_builtin          F2F2F2   # builtins       → near-white
+set -g fish_color_operator         9EF5B3   # operators      → pale green
+set -g fish_color_redirection      C7C7C7   # redirects      → gray
+set -g fish_color_end              33FF66   # semicolons     → green
+set -g fish_color_error            F2F2F2   # errors         → bold white (stands out on dark)
+set -g fish_color_comment          4A4A4A   # comments       → dim gray
+set -g fish_color_quote            9EF5B3   # strings        → pale green
+set -g fish_color_autosuggestion   4A4A4A   # ghost text     → dim gray
+set -g fish_color_search_match     --background=17C93C
+set -g fish_color_selection        --background=17C93C
+set -g fish_pager_color_prefix     33FF66
+set -g fish_pager_color_completion D4D4D4
+set -g fish_pager_color_description 4A4A4A
+set -g fish_pager_color_progress   33FF66

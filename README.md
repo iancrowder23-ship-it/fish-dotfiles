@@ -56,7 +56,7 @@ Re-run anytime to switch themes without touching plugins or your shell:
 | **graphite-emerald** *(default)* | Monochrome graphite-to-white base (near-black background, gray/white text), emerald green as the one recurring accent — cursor, git branch, prompt character, status. Purple/magenta only shows up as a rare, muted secondary touch. |
 | **catppuccin-mocha** | The original — warm purple/peach Catppuccin Mocha, unchanged |
 
-Both themes use a **powerline-style tide prompt**: solid color-block segments with angled separators (Nerd Font glyphs — the installer sets up the font), always-on `user@host` context, plus docker context and `SHLVL` indicators for nested shells.
+Both themes use the same framed, dotted-connector tide prompt shape from the original export — only the colors differ per theme.
 
 ---
 

@@ -306,12 +306,14 @@ if [[ $DO_PLUGINS -eq 1 ]]; then
     # Runs AFTER the wizard, on top of whatever layout you chose.
     # Only touches tide_*_color / tide_*_bg_color variables —
     # never items/separators/frame, so it can't undo your
-    # layout choices from step 7.
+    # layout choices from step 7. Tide bakes prompt colors into
+    # fish_prompt at session start, so a fresh shell is required
+    # to see them — that happens naturally once you open kitty.
     if [[ $DO_MONO_GREEN_PROMPT -eq 1 ]]; then
         step "Applying monochrome grey + green prompt colors"
-        info "Dark-grey/light-grey segment backgrounds, green lettering and icons throughout."
+        info "Dark-grey/mid-grey/light-grey segment tiers, green lettering and icons throughout."
         fish "$SRC/scripts/tide-colors.fish" </dev/null
-        ok "Prompt colors applied"
+        ok "Prompt colors applied — will show once you open a new terminal (tide loads colors at session start)"
     else
         warn "Skipped the monochrome grey+green prompt colors — apply anytime with: fish $SRC/scripts/tide-colors.fish"
     fi

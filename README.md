@@ -60,7 +60,7 @@ Re-run just the prompt wizard anytime, independent of the installer:
 fish -c 'tide configure'
 ```
 
-Re-apply just the monochrome grey+green prompt colors anytime, independent of the installer (useful after re-running the wizard, since the wizard resets colors to its own defaults):
+Re-apply just the monochrome grey+green prompt colors anytime, independent of the installer (useful after re-running the wizard, since the wizard resets colors to its own defaults). Note: Tide bakes prompt colors into `fish_prompt` at session start, so open a **new** terminal window/tab (or run `exec fish`) afterward to actually see the change:
 
 ```bash
 fish ~/.local/share/fish-dotfiles/scripts/tide-colors.fish
@@ -75,7 +75,7 @@ fish ~/.local/share/fish-dotfiles/scripts/tide-colors.fish
 | **graphite-emerald** *(default)* | Monochrome graphite-to-white base (near-black background, gray/white text), emerald green as the one recurring accent — cursor, git branch, prompt highlights. Purple/magenta only shows up as a rare, muted secondary touch. |
 | **catppuccin-mocha** | The original — warm purple/peach Catppuccin Mocha, unchanged |
 
-**Themes only control colors** (kitty palette, fish syntax highlighting, git status colors, fastfetch). **Prompt structure/layout/style is controlled separately by Tide's own `tide configure` wizard** — run it once during install (or anytime after with `fish -c 'tide configure'`) and pick whatever prompt style you like. Optionally, on top of that, `scripts/tide-colors.fish` repaints every prompt segment with a fixed monochrome look — alternating dark-grey/light-grey backgrounds and green text/icons throughout — independent of which theme or which tide layout you picked.
+**Themes only control colors** (kitty palette, fish syntax highlighting, git status colors, fastfetch). **Prompt structure/layout/style is controlled separately by Tide's own `tide configure` wizard** — run it once during install (or anytime after with `fish -c 'tide configure'`) and pick whatever prompt style you like. Optionally, on top of that, `scripts/tide-colors.fish` repaints every prompt segment with a fixed monochrome look — three grey tiers (darkest/mid/light, modeled on Tide's own official presets so segment boundaries stay readable) and green text/icons throughout — independent of which theme or which tide layout you picked.
 
 ---
 
@@ -270,6 +270,8 @@ exec fish
 Check `fisher list` to see which plugins are actually installed.
 
 **Want to change your prompt style/layout later** — just run `fish -c 'tide configure'` again anytime; it overwrites your previous answers.
+
+**Prompt shows raw text like `3A3A3A` instead of your path/icons** — you're seeing stale prompt state from before colors finished applying, or you're still in the same session that ran `scripts/tide-colors.fish`. Tide bakes its color codes into `fish_prompt` once at session start — it does **not** re-read `tide_*_color` variables on every render. Fix: close the terminal and open a new one, or run `exec fish`. Just running `source` or reloading config is not enough.
 
 **`done` notifications don't appear** — you need a notification daemon (`dunst`, `mako`, or your DE's built-in). `libnotify` only provides the client side.
 

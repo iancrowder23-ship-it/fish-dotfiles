@@ -1,11 +1,13 @@
-// Catppuccin Mocha fastfetch config — original mauve/peach look.
+// Catppuccin Mocha fastfetch config
+// Original warm purple/peach look — matches
+// kitty/themes/catppuccin-mocha.conf and scripts/tide/catppuccin-mocha.fish
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     "logo": {
         "type": "small",
         "color": {
-            "1": "magenta",
-            "2": "white"
+            "1": "#CBA6F7",
+            "2": "#FAB387"
         },
         "padding": {
             "top": 1,
@@ -13,28 +15,98 @@
         }
     },
     "display": {
-        "separator": "  ",
+        "separator": " ",
         "color": {
-            "keys": "magenta",
-            "output": "white"
-        }
+            "keys": "#CBA6F7",
+            "output": "#CDD6F4"
+        },
+        "constants": [
+            "───────────────────────"
+        ]
     },
     "modules": [
-        "title",
-        "separator",
-        "os",
-        "host",
-        "kernel",
-        "uptime",
-        "packages",
-        "shell",
-        "terminal",
-        "cpu",
-        "gpu",
-        "memory",
-        "disk",
-        "localip",
+        {
+            "type": "custom",
+            "format": "┌{$1}┐",
+            "outputColor": "#6C7086"
+        },
+        {
+            "type": "title",
+            "key": "│ 󰀄",
+            "keyColor": "#CBA6F7",
+            "format": "{user-name}@{host-name}"
+        },
+        {
+            "type": "os",
+            "key": "│ {icon}",
+            "keyColor": "#CBA6F7"
+        },
+        {
+            "type": "kernel",
+            "key": "│ 󰌢",
+            "keyColor": "#CBA6F7"
+        },
+        {
+            "type": "uptime",
+            "key": "│ 󰅐",
+            "keyColor": "#CBA6F7"
+        },
+        {
+            "type": "packages",
+            "key": "│ 󰏖",
+            "keyColor": "#CBA6F7"
+        },
+        {
+            "type": "custom",
+            "format": "├{$1}┤",
+            "outputColor": "#6C7086"
+        },
+        {
+            "type": "shell",
+            "key": "│ ",
+            "keyColor": "#FAB387"
+        },
+        {
+            "type": "terminal",
+            "key": "│ ",
+            "keyColor": "#FAB387"
+        },
+        {
+            "type": "cpu",
+            "key": "│ 󰻠",
+            "keyColor": "#FAB387"
+        },
+        {
+            "type": "gpu",
+            "key": "│ 󰍛",
+            "keyColor": "#FAB387"
+        },
+        {
+            "type": "memory",
+            "key": "│ 󰑭",
+            "keyColor": "#FAB387"
+        },
+        {
+            "type": "disk",
+            "key": "│ 󰋊",
+            "keyColor": "#FAB387"
+        },
+        {
+            "type": "localip",
+            "key": "│ 󰩟",
+            "keyColor": "#FAB387",
+            "compact": true
+        },
+        {
+            "type": "custom",
+            "format": "└{$1}┘",
+            "outputColor": "#6C7086"
+        },
         "break",
-        "colors"
+        {
+            "type": "colors",
+            "paddingLeft": 2,
+            "symbol": "circle"
+        }
     ]
 }

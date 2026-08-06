@@ -1,8 +1,7 @@
 #!/usr/bin/env fish
 # Tide v6 theme — Graphite Emerald
-# Same prompt SHAPE as the original export (framed left prompt,
-# dotted connector, no powerline separators) — only the colors
-# are new: monochrome graphite/gray base, emerald green accent.
+# Monochrome graphite/gray base, emerald green accent. Round
+# powerline separators between left-side segments (os -> pwd -> git).
 # Run by install.sh after fisher installs tide.
 
 set -U _tide_left_items 'os' 'pwd' 'git' 'newline' 'character'
@@ -78,11 +77,11 @@ set -U tide_jobs_number_threshold '1000'
 set -U tide_kubectl_bg_color '326CE5'
 set -U tide_kubectl_color '000000'
 set -U tide_kubectl_icon '󱃾'
-set -U tide_left_prompt_frame_enabled 'true'
+set -U tide_left_prompt_frame_enabled 'false'
 set -U tide_left_prompt_items 'os' 'pwd' 'git' 'newline' 'character'
 set -U tide_left_prompt_prefix ''
-set -U tide_left_prompt_separator_diff_color ''
-set -U tide_left_prompt_separator_same_color ''
+set -U tide_left_prompt_separator_diff_color ''
+set -U tide_left_prompt_separator_same_color ''
 set -U tide_left_prompt_suffix ''
 set -U tide_nix_shell_bg_color '7EBAE4'
 set -U tide_nix_shell_color '000000'
@@ -90,7 +89,7 @@ set -U tide_nix_shell_icon ''
 set -U tide_node_bg_color '242830'
 set -U tide_node_color '7DD3C0'
 set -U tide_node_icon ''
-set -U tide_os_bg_color '3A3F47'
+set -U tide_os_bg_color '242830'
 set -U tide_os_color '34D399'
 set -U tide_os_icon ''
 set -U tide_php_bg_color '617CBE'
@@ -123,8 +122,8 @@ set -U tide_python_icon '󰌠'
 set -U tide_right_prompt_frame_enabled 'false'
 set -U tide_right_prompt_items 'status' 'cmd_duration' 'context' 'jobs' 'direnv' 'bun' 'node' 'python' 'rustc' 'java' 'php' 'pulumi' 'ruby' 'go' 'gcloud' 'kubectl' 'distrobox' 'toolbox' 'terraform' 'aws' 'nix_shell' 'crystal' 'elixir' 'zig' 'time'
 set -U tide_right_prompt_prefix ''
-set -U tide_right_prompt_separator_diff_color ''
-set -U tide_right_prompt_separator_same_color ''
+set -U tide_right_prompt_separator_diff_color ''
+set -U tide_right_prompt_separator_same_color ''
 set -U tide_right_prompt_suffix ''
 set -U tide_ruby_bg_color 'B31209'
 set -U tide_ruby_color '000000'

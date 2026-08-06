@@ -156,7 +156,7 @@ fish-dotfiles/
 
 ### fastfetch
 
-Runs automatically at the end of `fish_greeting` (every new interactive shell) if installed. Config is theme-matched: `fastfetch/<name>.jsonc` → deployed to `~/.config/fastfetch/config.jsonc`. Shows OS, host, kernel, uptime, packages, shell, terminal, CPU, GPU, memory, disk, local IP, and a color swatch bar. Skip it entirely with `--no-fastfetch`.
+Runs automatically at the end of `fish_greeting` (every new interactive shell) if installed. Config is theme-matched: `fastfetch/<name>.jsonc` → deployed to `~/.config/fastfetch/config.jsonc`. Boxed layout (`┌─┤─└`) with per-row Nerd Font icons and keys colored in the theme's accent, values in the theme's foreground gray. Shows user@host, OS, kernel, uptime, packages, shell, terminal, CPU, GPU, memory, disk, local IP, and a color swatch bar. Skip it entirely with `--no-fastfetch`.
 
 ### Aliases
 

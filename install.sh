@@ -9,6 +9,9 @@
 #  separators exactly how you want them. This script never
 #  hand-writes tide_* layout settings — it only supplies COLORS
 #  (kitty, fish syntax/git highlighting, fastfetch) per theme.
+#  Optionally, after the wizard, it can apply a monochrome
+#  dark-grey/light-grey + green prompt color pass on top of
+#  whatever structure you chose.
 #
 #  Usage (one command, full interactive walkthrough):
 #    curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/main/install.sh | bash
@@ -17,6 +20,7 @@
 #    ./install.sh --theme graphite-emerald --yes
 #    ./install.sh --theme catppuccin-mocha --no-fastfetch --no-shell-change
 #    ./install.sh --no-tide-wizard
+#    ./install.sh --mono-green-prompt --no-tide-wizard   # colors only, keep existing layout
 #
 #  Flags:
 #    -t, --theme <name>     graphite-emerald (default) | catppuccin-mocha
@@ -25,6 +29,8 @@
 #        --no-shell-change  don't chsh to fish
 #        --no-plugins       skip fisher + plugin install
 #        --no-tide-wizard   skip the interactive `tide configure` wizard
+#        --mono-green-prompt     apply the monochrome grey+green prompt colors (non-interactive)
+#        --no-mono-green-prompt  skip the monochrome grey+green prompt colors (non-interactive)
 #        --list-themes      print available themes and exit
 #    -h, --help             show this help and exit
 # ════════════════════════════════════════════════════════════════
@@ -102,10 +108,11 @@ DO_FASTFETCH=1
 DO_SHELL_CHANGE=1
 DO_PLUGINS=1
 DO_TIDE_WIZARD=1
+DO_MONO_GREEN_PROMPT=""
 WALKTHROUGH=1
 
 print_help() {
-    sed -n '2,29p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,33p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 while [[ $# -gt 0 ]]; do
@@ -116,6 +123,8 @@ while [[ $# -gt 0 ]]; do
         --no-shell-change) DO_SHELL_CHANGE=0; shift ;;
         --no-plugins) DO_PLUGINS=0; shift ;;
         --no-tide-wizard) DO_TIDE_WIZARD=0; shift ;;
+        --mono-green-prompt) DO_MONO_GREEN_PROMPT=1; shift ;;
+        --no-mono-green-prompt) DO_MONO_GREEN_PROMPT=0; shift ;;
         --list-themes) list_themes; exit 0 ;;
         -h|--help) print_help; exit 0 ;;
         *) die "Unknown option: $1 (see --help)" ;;
@@ -124,6 +133,10 @@ done
 
 # Non-interactive terminals (piped, CI, etc.) can't run a walkthrough
 [[ -t 0 ]] || WALKTHROUGH=0
+
+# Default for non-interactive runs: mono-green prompt colors ON
+# unless the user explicitly passed --no-mono-green-prompt
+[[ -z "$DO_MONO_GREEN_PROMPT" ]] && DO_MONO_GREEN_PROMPT=1
 
 banner
 
@@ -140,6 +153,7 @@ if [[ $WALKTHROUGH -eq 1 ]]; then
     printf '  %s3)%s install everything\n' "$C_DIM" "$C_RESET"
     printf '  %s4)%s hand you off to Tide'"'"'s own interactive prompt wizard so you can\n' "$C_DIM" "$C_RESET"
     printf '     %scustomize the prompt segments/style/separators/icons yourself%s\n' "$C_DIM" "$C_RESET"
+    printf '  %s5)%s optionally apply monochrome grey+green prompt colors on top\n' "$C_DIM" "$C_RESET"
     printf '\n'
 fi
 
@@ -177,8 +191,12 @@ if [[ $WALKTHROUGH -eq 1 ]]; then
     if [[ $DO_PLUGINS -eq 1 ]]; then
         ask_yn "Launch Tide's interactive 'tide configure' wizard after install (recommended — this is how you customize the prompt)?" y
         DO_TIDE_WIZARD=$REPLY_YN
+
+        ask_yn "After that, apply monochrome dark-grey/light-grey segment colors with green lettering across the whole prompt?" y
+        DO_MONO_GREEN_PROMPT=$REPLY_YN
     else
         DO_TIDE_WIZARD=0
+        DO_MONO_GREEN_PROMPT=0
     fi
 
     ask_yn "Set fish as your default login shell?" y
@@ -283,6 +301,20 @@ if [[ $DO_PLUGINS -eq 1 ]]; then
     else
         warn "Skipped the tide wizard — run it anytime with: fish -c 'tide configure'"
     fi
+
+    # ── 7b. Monochrome grey + green prompt color pass ────────
+    # Runs AFTER the wizard, on top of whatever layout you chose.
+    # Only touches tide_*_color / tide_*_bg_color variables —
+    # never items/separators/frame, so it can't undo your
+    # layout choices from step 7.
+    if [[ $DO_MONO_GREEN_PROMPT -eq 1 ]]; then
+        step "Applying monochrome grey + green prompt colors"
+        info "Dark-grey/light-grey segment backgrounds, green lettering and icons throughout."
+        fish "$SRC/scripts/tide-colors.fish" </dev/null
+        ok "Prompt colors applied"
+    else
+        warn "Skipped the monochrome grey+green prompt colors — apply anytime with: fish $SRC/scripts/tide-colors.fish"
+    fi
 else
     warn "Skipping fisher/plugins (per your choice) — no prompt engine installed"
 fi
@@ -310,4 +342,5 @@ printf '%s%s╰─────────────────────�
 printf '  Log out/in (or just launch kitty) to enjoy the full setup.\n'
 printf '  Backups of any previous configs: %s~/.config/{kitty,fish,fastfetch}.bak-%s%s\n' "$C_DIM" "$STAMP" "$C_RESET"
 printf '  Re-run the prompt wizard anytime: %sfish -c '"'"'tide configure'"'"'%s\n' "$C_DIM" "$C_RESET"
+printf '  Re-apply mono grey+green prompt colors anytime: %sfish %s/scripts/tide-colors.fish%s\n' "$C_DIM" "$SRC" "$C_RESET"
 printf '  Switch color themes anytime: %s./install.sh --theme <name> --no-plugins --no-shell-change%s\n\n' "$C_DIM" "$C_RESET"

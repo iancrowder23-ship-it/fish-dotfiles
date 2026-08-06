@@ -13,13 +13,14 @@ curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/
 This runs a full interactive walkthrough:
 
 1. **Pick a color theme** (`graphite-emerald` or `catppuccin-mocha`)
-2. **Choose optional components** — fastfetch on startup? fisher + plugins? launch the prompt wizard? set fish as default shell?
+2. **Choose optional components** — fastfetch on startup? fisher + plugins? launch the prompt wizard? apply monochrome grey+green prompt colors? set fish as default shell?
 3. **Installs packages** via pacman: `kitty`, `fish`, `git`, `curl`, `eza`, `bind` (for `dig`), `libnotify` (for notifications), `fastfetch` (optional), `ttf-jetbrains-mono-nerd`, `noto-fonts-emoji`
 4. **Backs up** any existing `~/.config/kitty`, `~/.config/fish`, `~/.config/fastfetch` (timestamped `.bak-` folders)
 5. **Deploys colors** for your chosen theme (kitty, fish syntax highlighting, git colors, fastfetch)
 6. **Installs** [fisher](https://github.com/jorgebucaran/fisher) and all plugins (tide, autopair, done, puffer-fish)
 7. **Launches Tide's own interactive `tide configure` wizard** — this is the real prompt customization system: it walks you through prompt style (Lean/Classic/Rainbow/Powerline), character set, spacing, transient prompt, and segment order. This repo never hand-writes prompt layout — you build it yourself, live, with instant preview.
-8. **Sets fish as your default shell** (if you said yes)
+8. **Optionally applies monochrome prompt colors** — `scripts/tide-colors.fish` runs after the wizard and repaints every segment with alternating dark-grey/light-grey backgrounds and green lettering/icons, on top of whatever layout you just chose. It only touches colors, never items/separators/frame, so it can't undo your layout choices.
+9. **Sets fish as your default shell** (if you said yes)
 
 Log out/in (or just open kitty) and everything is ready.
 
@@ -42,6 +43,8 @@ Skips the walkthrough entirely — useful for a second machine once you already 
 | `--no-shell-change` | Don't `chsh` to fish |
 | `--no-plugins` | Skip fisher + plugin install (also skips the tide wizard) |
 | `--no-tide-wizard` | Skip launching `tide configure` (keeps whatever prompt config you already have) |
+| `--mono-green-prompt` | Apply the monochrome grey+green prompt colors (non-interactive) |
+| `--no-mono-green-prompt` | Skip the monochrome grey+green prompt colors (non-interactive) |
 | `--list-themes` | Print available themes and exit |
 | `-h, --help` | Show usage and exit |
 
@@ -57,6 +60,12 @@ Re-run just the prompt wizard anytime, independent of the installer:
 fish -c 'tide configure'
 ```
 
+Re-apply just the monochrome grey+green prompt colors anytime, independent of the installer (useful after re-running the wizard, since the wizard resets colors to its own defaults):
+
+```bash
+fish ~/.local/share/fish-dotfiles/scripts/tide-colors.fish
+```
+
 ---
 
 ## Themes
@@ -66,7 +75,7 @@ fish -c 'tide configure'
 | **graphite-emerald** *(default)* | Monochrome graphite-to-white base (near-black background, gray/white text), emerald green as the one recurring accent — cursor, git branch, prompt highlights. Purple/magenta only shows up as a rare, muted secondary touch. |
 | **catppuccin-mocha** | The original — warm purple/peach Catppuccin Mocha, unchanged |
 
-**Themes only control colors** (kitty palette, fish syntax highlighting, git status colors, fastfetch). **Prompt structure/layout/style is controlled separately by Tide's own `tide configure` wizard** — run it once during install (or anytime after with `fish -c 'tide configure'`) and pick whatever prompt style you like; it applies on top of whichever color theme you installed.
+**Themes only control colors** (kitty palette, fish syntax highlighting, git status colors, fastfetch). **Prompt structure/layout/style is controlled separately by Tide's own `tide configure` wizard** — run it once during install (or anytime after with `fish -c 'tide configure'`) and pick whatever prompt style you like. Optionally, on top of that, `scripts/tide-colors.fish` repaints every prompt segment with a fixed monochrome look — alternating dark-grey/light-grey backgrounds and green text/icons throughout — independent of which theme or which tide layout you picked.
 
 ---
 
@@ -97,9 +106,12 @@ fish-dotfiles/
 └── fastfetch/
     ├── graphite-emerald.jsonc       fastfetch layout matching the theme → ~/.config/fastfetch/config.jsonc
     └── catppuccin-mocha.jsonc
+└── scripts/
+    └── tide-colors.fish             optional: monochrome grey+green colors for ANY tide layout,
+                                      run after `tide configure`. Never touches items/separators/frame.
 ```
 
-Note: there's intentionally no `scripts/tide-*.fish` file. Prompt layout comes from `tide configure`, which writes its own settings straight into fish's universal variable store (`fish_variables`) — nothing in this repo needs to duplicate or hand-maintain that.
+Note: there's intentionally no `scripts/tide-<theme>.fish` layout file. Prompt structure comes from `tide configure`, which writes its own settings straight into fish's universal variable store (`fish_variables`) — nothing in this repo needs to duplicate or hand-maintain that. `scripts/tide-colors.fish` is the one exception: it's an optional, purely cosmetic color overlay that works on top of any layout you chose in the wizard.
 
 ---
 

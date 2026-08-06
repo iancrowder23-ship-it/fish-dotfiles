@@ -53,10 +53,10 @@ Re-run anytime to switch themes without touching plugins or your shell:
 
 | Theme | Look |
 |---|---|
-| **graphite-emerald** *(default)* | Modern dark-graphite background, purple/peach accents (carried over from the original look), emerald green used sparingly — cursor, git status, success states only |
+| **graphite-emerald** *(default)* | Monochrome graphite-to-white base (near-black background, gray/white text), emerald green as the one recurring accent — cursor, git branch, prompt character, status. Purple/magenta only shows up as a rare, muted secondary touch. |
 | **catppuccin-mocha** | The original — warm purple/peach Catppuccin Mocha, unchanged |
 
-Each theme bundles matching colors for kitty, the fish prompt (tide), fish syntax highlighting, the greeting gradient, and fastfetch — switching themes re-colors the whole stack consistently.
+Both themes use a **powerline-style tide prompt**: solid color-block segments with angled separators (Nerd Font glyphs — the installer sets up the font), always-on `user@host` context, plus docker context and `SHLVL` indicators for nested shells.
 
 ---
 

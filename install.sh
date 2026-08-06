@@ -1,24 +1,30 @@
 #!/usr/bin/env bash
 # ════════════════════════════════════════════════════════════════
-#  fish-dotfiles — one-command Arch Linux installer
+#  fish-dotfiles — interactive Arch Linux installer
 #
-#  Installs kitty + fish + fonts + tools, deploys configs,
-#  installs fisher plugins, applies your chosen tide theme,
-#  optionally sets up fastfetch, and sets fish as the shell.
+#  A guided walkthrough: pick a color theme, choose optional
+#  components, install packages, deploy configs, install fisher
+#  plugins, then hand you off to Tide's own official interactive
+#  `tide configure` wizard so YOU pick prompt layout/style/icons/
+#  separators exactly how you want them. This script never
+#  hand-writes tide_* layout settings — it only supplies COLORS
+#  (kitty, fish syntax/git highlighting, fastfetch) per theme.
 #
-#  Usage (one command, interactive menu):
+#  Usage (one command, full interactive walkthrough):
 #    curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/main/install.sh | bash
 #
-#  Non-interactive / scripted:
+#  Non-interactive / scripted (skips the walkthrough):
 #    ./install.sh --theme graphite-emerald --yes
 #    ./install.sh --theme catppuccin-mocha --no-fastfetch --no-shell-change
+#    ./install.sh --no-tide-wizard
 #
 #  Flags:
 #    -t, --theme <name>     graphite-emerald (default) | catppuccin-mocha
-#    -y, --yes              accept all defaults, skip prompts
+#    -y, --yes              accept all defaults, skip the interactive walkthrough
 #        --no-fastfetch     skip installing/deploying fastfetch
 #        --no-shell-change  don't chsh to fish
 #        --no-plugins       skip fisher + plugin install
+#        --no-tide-wizard   skip the interactive `tide configure` wizard
 #        --list-themes      print available themes and exit
 #    -h, --help             show this help and exit
 # ════════════════════════════════════════════════════════════════
@@ -59,15 +65,23 @@ info()  { printf '  %s%s%s %s\n' "$C_BLUE" "$GLYPH_DOT" "$C_RESET" "$*"; }
 ok()    { printf '  %s%s%s %s\n' "$C_GREEN" "$GLYPH_OK" "$C_RESET" "$*"; }
 warn()  { printf '  %s%s%s %s\n' "$C_PEACH" "$GLYPH_WARN" "$C_RESET" "$*"; }
 die()   { printf '  %s%s%s %s\n' "$C_RED" "$GLYPH_ERR" "$C_RESET" "$*" >&2; exit 1; }
-
-# Simple spinner-free progress marker for long steps
 task_start() { printf '  %s%s%s %s%s...%s\n' "$C_GRAY" "$GLYPH_DOT" "$C_RESET" "$C_DIM" "$*" "$C_RESET"; }
+
+ask_yn() {
+    # ask_yn "question" default(y|n) -> sets REPLY_YN=0/1
+    local q="$1" def="${2:-y}" ans suffix
+    [[ "$def" == "y" ]] && suffix="[Y/n]" || suffix="[y/N]"
+    printf '  %s%s%s %s %s%s%s ' "$C_PURPLE" "$GLYPH_ARROW" "$C_RESET" "$q" "$C_DIM" "$suffix" "$C_RESET"
+    read -r ans </dev/tty || ans=""
+    ans="${ans:-$def}"
+    if [[ "$ans" =~ ^[Yy] ]]; then REPLY_YN=1; else REPLY_YN=0; fi
+}
 
 # ── Available themes (name → description) ─────────────────────
 THEME_NAMES=(graphite-emerald catppuccin-mocha)
 theme_desc() {
     case "$1" in
-        graphite-emerald) echo "Modern graphite base, purple/peach accents, emerald green highlights" ;;
+        graphite-emerald) echo "Monochrome graphite base, emerald green accent (modern, muted)" ;;
         catppuccin-mocha) echo "The original — warm purple/peach Catppuccin Mocha" ;;
         *) echo "" ;;
     esac
@@ -87,23 +101,29 @@ ASSUME_YES=0
 DO_FASTFETCH=1
 DO_SHELL_CHANGE=1
 DO_PLUGINS=1
+DO_TIDE_WIZARD=1
+WALKTHROUGH=1
 
 print_help() {
-    sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,29p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -t|--theme) THEME="${2:-}"; shift 2 ;;
-        -y|--yes) ASSUME_YES=1; shift ;;
+        -y|--yes) ASSUME_YES=1; WALKTHROUGH=0; shift ;;
         --no-fastfetch) DO_FASTFETCH=0; shift ;;
         --no-shell-change) DO_SHELL_CHANGE=0; shift ;;
         --no-plugins) DO_PLUGINS=0; shift ;;
+        --no-tide-wizard) DO_TIDE_WIZARD=0; shift ;;
         --list-themes) list_themes; exit 0 ;;
         -h|--help) print_help; exit 0 ;;
         *) die "Unknown option: $1 (see --help)" ;;
     esac
 done
+
+# Non-interactive terminals (piped, CI, etc.) can't run a walkthrough
+[[ -t 0 ]] || WALKTHROUGH=0
 
 banner
 
@@ -112,12 +132,20 @@ banner
 command -v pacman >/dev/null 2>&1 || die "pacman not found — this script targets Arch Linux."
 [[ $EUID -ne 0 ]] || die "Run as your normal user, not root (sudo is used where needed)."
 
-# ── 0b. Interactive prompts (skipped with --yes or when flags given) ──
+# ── 0b. Interactive walkthrough ────────────────────────────────
+if [[ $WALKTHROUGH -eq 1 ]]; then
+    printf '%sThis walkthrough will:%s\n' "$C_BOLD" "$C_RESET"
+    printf '  %s1)%s let you pick a color theme\n' "$C_DIM" "$C_RESET"
+    printf '  %s2)%s let you choose optional components (fastfetch, default shell)\n' "$C_DIM" "$C_RESET"
+    printf '  %s3)%s install everything\n' "$C_DIM" "$C_RESET"
+    printf '  %s4)%s hand you off to Tide'"'"'s own interactive prompt wizard so you can\n' "$C_DIM" "$C_RESET"
+    printf '     %scustomize the prompt segments/style/separators/icons yourself%s\n' "$C_DIM" "$C_RESET"
+    printf '\n'
+fi
+
 if [[ -z "$THEME" ]]; then
-    if [[ $ASSUME_YES -eq 1 || ! -t 0 ]]; then
-        THEME="graphite-emerald"
-    else
-        printf '%sChoose a color theme:%s\n' "$C_BOLD" "$C_RESET"
+    if [[ $WALKTHROUGH -eq 1 ]]; then
+        printf '%sStep 1 — Choose a color theme:%s\n' "$C_BOLD" "$C_RESET"
         i=1
         for t in "${THEME_NAMES[@]}"; do
             printf '  %s%d)%s %s%s%s  %s%s%s\n' "$C_PURPLE" "$i" "$C_RESET" "$C_BOLD" "$t" "$C_RESET" "$C_DIM" "$(theme_desc "$t")" "$C_RESET"
@@ -127,6 +155,8 @@ if [[ -z "$THEME" ]]; then
         read -r choice </dev/tty || choice=""
         choice="${choice:-1}"
         THEME="${THEME_NAMES[$((choice-1))]:-graphite-emerald}"
+    else
+        THEME="graphite-emerald"
     fi
 fi
 
@@ -135,14 +165,24 @@ if [[ ! " ${THEME_NAMES[*]} " =~ " ${THEME} " ]]; then
 fi
 ok "Theme: ${C_BOLD}${THEME}${C_RESET} — $(theme_desc "$THEME")"
 
-if [[ $ASSUME_YES -eq 0 && -t 0 ]]; then
-    printf '%sInstall fastfetch + run it on shell startup? [Y/n]:%s ' "$C_GRAY" "$C_RESET"
-    read -r ans </dev/tty || ans="y"
-    [[ "$ans" =~ ^[Nn] ]] && DO_FASTFETCH=0
+if [[ $WALKTHROUGH -eq 1 ]]; then
+    printf '\n%sStep 2 — Optional components:%s\n' "$C_BOLD" "$C_RESET"
 
-    printf '%sSet fish as your default shell? [Y/n]:%s ' "$C_GRAY" "$C_RESET"
-    read -r ans </dev/tty || ans="y"
-    [[ "$ans" =~ ^[Nn] ]] && DO_SHELL_CHANGE=0
+    ask_yn "Install fastfetch and run it on every new shell?" y
+    DO_FASTFETCH=$REPLY_YN
+
+    ask_yn "Install fisher + plugins (tide, autopair, done, puffer-fish)?" y
+    DO_PLUGINS=$REPLY_YN
+
+    if [[ $DO_PLUGINS -eq 1 ]]; then
+        ask_yn "Launch Tide's interactive 'tide configure' wizard after install (recommended — this is how you customize the prompt)?" y
+        DO_TIDE_WIZARD=$REPLY_YN
+    else
+        DO_TIDE_WIZARD=0
+    fi
+
+    ask_yn "Set fish as your default login shell?" y
+    DO_SHELL_CHANGE=$REPLY_YN
 fi
 
 # ── 1. Install packages ──────────────────────────────────────
@@ -226,14 +266,25 @@ if [[ $DO_PLUGINS -eq 1 ]]; then
     if ! fish -c 'fisher update' </dev/null; then
         die "fisher update failed — see the error above, then retry with: fish -c 'fisher update'"
     fi
-    ok "Plugins installed"
+    ok "Plugins installed (tide, autopair, done, puffer-fish)"
 
-    # ── 7. Apply tide prompt theme ───────────────────────────
-    step "Applying tide prompt ($THEME)"
-    fish "$SRC/scripts/tide/$THEME.fish" </dev/null
-    ok "Tide theme applied"
+    # ── 7. Tide's own interactive configure wizard ───────────
+    # We deliberately do NOT hand-write tide_* prompt layout
+    # settings. Tide ships an official guided wizard that walks
+    # you through prompt style, character set, segment order,
+    # spacing, transient prompt, and more — that's the real
+    # customization system, so we launch it here.
+    if [[ $DO_TIDE_WIZARD -eq 1 ]]; then
+        step "Launching Tide's interactive prompt wizard"
+        info "Answer the on-screen questions to build your prompt exactly how you want it."
+        info "(Colors are already set by the '$THEME' theme — this wizard controls layout/style.)"
+        printf '\n'
+        fish -c 'tide configure' </dev/tty || warn "tide configure exited early — re-run anytime with: fish -c 'tide configure'"
+    else
+        warn "Skipped the tide wizard — run it anytime with: fish -c 'tide configure'"
+    fi
 else
-    warn "Skipping fisher/plugins (per your choice) — tide prompt theme not applied"
+    warn "Skipping fisher/plugins (per your choice) — no prompt engine installed"
 fi
 
 # ── 8. Set fish as default shell ─────────────────────────────
@@ -258,4 +309,5 @@ printf '%s%s│  %s All done! Theme: %-18s │%s\n' "$C_BOLD" "$C_GREEN" "$GLYPH
 printf '%s%s╰──────────────────────────────────────────╯%s\n\n' "$C_BOLD" "$C_GREEN" "$C_RESET"
 printf '  Log out/in (or just launch kitty) to enjoy the full setup.\n'
 printf '  Backups of any previous configs: %s~/.config/{kitty,fish,fastfetch}.bak-%s%s\n' "$C_DIM" "$STAMP" "$C_RESET"
-printf '  Switch themes anytime: %s./install.sh --theme <name> --no-plugins --no-shell-change%s\n\n' "$C_DIM" "$C_RESET"
+printf '  Re-run the prompt wizard anytime: %sfish -c '"'"'tide configure'"'"'%s\n' "$C_DIM" "$C_RESET"
+printf '  Switch color themes anytime: %s./install.sh --theme <name> --no-plugins --no-shell-change%s\n\n' "$C_DIM" "$C_RESET"

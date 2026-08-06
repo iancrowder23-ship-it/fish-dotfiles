@@ -1,28 +1,31 @@
 # fish-dotfiles
 
-Complete kitty + fish terminal setup — pick a theme, **JetBrainsMono Nerd Font**, **tide v6** prompt, animated cursor, typewriter greeting, **fastfetch** on every new shell. Exported from macOS, fully portable to Arch Linux with a one-command interactive installer.
+Complete kitty + fish terminal setup — pick a color theme, **JetBrainsMono Nerd Font**, **tide v6** prompt (styled by Tide's own official configuration wizard), animated cursor, typewriter greeting, **fastfetch** on every new shell. Exported from macOS, fully portable to Arch Linux with a one-command interactive installer.
 
 ---
 
-## Quick start — Arch Linux (one command)
+## Quick start — Arch Linux (one command, guided walkthrough)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/main/install.sh | bash
 ```
 
-You'll be prompted to pick a color theme, whether to enable fastfetch, and whether to set fish as your default shell. The script then does everything else:
+This runs a full interactive walkthrough:
 
-1. Installs packages via pacman: `kitty`, `fish`, `git`, `curl`, `eza`, `bind` (for `dig`), `libnotify` (for notifications), `fastfetch` (optional), `ttf-jetbrains-mono-nerd`, `noto-fonts-emoji`
-2. Backs up any existing `~/.config/kitty`, `~/.config/fish`, `~/.config/fastfetch` (timestamped `.bak-` folders)
-3. Deploys configs for your chosen theme
-4. Refreshes the font cache
-5. Installs [fisher](https://github.com/jorgebucaran/fisher) and all plugins
-6. Applies the matching tide prompt theme (161 universal variables)
-7. Sets fish as your default shell (if you said yes)
+1. **Pick a color theme** (`graphite-emerald` or `catppuccin-mocha`)
+2. **Choose optional components** — fastfetch on startup? fisher + plugins? launch the prompt wizard? set fish as default shell?
+3. **Installs packages** via pacman: `kitty`, `fish`, `git`, `curl`, `eza`, `bind` (for `dig`), `libnotify` (for notifications), `fastfetch` (optional), `ttf-jetbrains-mono-nerd`, `noto-fonts-emoji`
+4. **Backs up** any existing `~/.config/kitty`, `~/.config/fish`, `~/.config/fastfetch` (timestamped `.bak-` folders)
+5. **Deploys colors** for your chosen theme (kitty, fish syntax highlighting, git colors, fastfetch)
+6. **Installs** [fisher](https://github.com/jorgebucaran/fisher) and all plugins (tide, autopair, done, puffer-fish)
+7. **Launches Tide's own interactive `tide configure` wizard** — this is the real prompt customization system: it walks you through prompt style (Lean/Classic/Rainbow/Powerline), character set, spacing, transient prompt, and segment order. This repo never hand-writes prompt layout — you build it yourself, live, with instant preview.
+8. **Sets fish as your default shell** (if you said yes)
 
 Log out/in (or just open kitty) and everything is ready.
 
 ### Non-interactive / scripted install
+
+Skips the walkthrough entirely — useful for a second machine once you already know what you want:
 
 ```bash
 ./install.sh --theme graphite-emerald --yes
@@ -34,17 +37,24 @@ Log out/in (or just open kitty) and everything is ready.
 | Flag | Effect |
 |---|---|
 | `-t, --theme <name>` | `graphite-emerald` (default) or `catppuccin-mocha` |
-| `-y, --yes` | Accept all defaults, skip interactive prompts |
+| `-y, --yes` | Accept all defaults, skip the interactive walkthrough entirely |
 | `--no-fastfetch` | Skip installing/deploying fastfetch |
 | `--no-shell-change` | Don't `chsh` to fish |
-| `--no-plugins` | Skip fisher + plugin install (also skips the tide theme apply) |
+| `--no-plugins` | Skip fisher + plugin install (also skips the tide wizard) |
+| `--no-tide-wizard` | Skip launching `tide configure` (keeps whatever prompt config you already have) |
 | `--list-themes` | Print available themes and exit |
 | `-h, --help` | Show usage and exit |
 
-Re-run anytime to switch themes without touching plugins or your shell:
+Re-run anytime to switch color themes without touching plugins, prompt layout, or your shell:
 
 ```bash
 ./install.sh --theme catppuccin-mocha --no-plugins --no-shell-change
+```
+
+Re-run just the prompt wizard anytime, independent of the installer:
+
+```bash
+fish -c 'tide configure'
 ```
 
 ---
@@ -53,10 +63,10 @@ Re-run anytime to switch themes without touching plugins or your shell:
 
 | Theme | Look |
 |---|---|
-| **graphite-emerald** *(default)* | Monochrome graphite-to-white base (near-black background, gray/white text), emerald green as the one recurring accent — cursor, git branch, prompt character, status. Purple/magenta only shows up as a rare, muted secondary touch. |
+| **graphite-emerald** *(default)* | Monochrome graphite-to-white base (near-black background, gray/white text), emerald green as the one recurring accent — cursor, git branch, prompt highlights. Purple/magenta only shows up as a rare, muted secondary touch. |
 | **catppuccin-mocha** | The original — warm purple/peach Catppuccin Mocha, unchanged |
 
-Both themes use the same framed, dotted-connector tide prompt shape from the original export — only the colors differ per theme.
+**Themes only control colors** (kitty palette, fish syntax highlighting, git status colors, fastfetch). **Prompt structure/layout/style is controlled separately by Tide's own `tide configure` wizard** — run it once during install (or anytime after with `fish -c 'tide configure'`) and pick whatever prompt style you like; it applies on top of whichever color theme you installed.
 
 ---
 
@@ -64,7 +74,7 @@ Both themes use the same framed, dotted-connector tide prompt shape from the ori
 
 ```
 fish-dotfiles/
-├── install.sh                       fancy interactive Arch Linux installer
+├── install.sh                       interactive walkthrough installer
 ├── kitty/
 │   ├── kitty.conf                   shared config — font, layout, keybinds; includes theme.conf
 │   ├── os-linux.conf                Linux overrides  → installed as os.conf by install.sh
@@ -84,13 +94,12 @@ fish-dotfiles/
 │       ├── fish_greeting.fish       typewriter welcome banner (theme gradient) + fastfetch
 │       ├── mkcd.fish                mkdir + cd in one
 │       └── reload.fish              reload fish config
-├── fastfetch/
-│   ├── graphite-emerald.jsonc       fastfetch layout matching the theme → ~/.config/fastfetch/config.jsonc
-│   └── catppuccin-mocha.jsonc
-└── scripts/tide/
-    ├── graphite-emerald.fish        exact tide v6 theme export per color theme
-    └── catppuccin-mocha.fish
+└── fastfetch/
+    ├── graphite-emerald.jsonc       fastfetch layout matching the theme → ~/.config/fastfetch/config.jsonc
+    └── catppuccin-mocha.jsonc
 ```
+
+Note: there's intentionally no `scripts/tide-*.fish` file. Prompt layout comes from `tide configure`, which writes its own settings straight into fish's universal variable store (`fish_variables`) — nothing in this repo needs to duplicate or hand-maintain that.
 
 ---
 
@@ -131,11 +140,18 @@ fish-dotfiles/
 
 ### Fish shell
 
-**Prompt** — [tide v6](https://github.com/IlanCosman/tide), two-line powerline:
+**Prompt** — [tide v6](https://github.com/IlanCosman/tide). Layout/style is entirely up to you via `tide configure` (launched during install, or run `fish -c 'tide configure'` anytime). The wizard asks about:
 
-- Left: OS icon · path · git status · prompt character
-- Right: exit status · command duration · user@host · jobs · node/python/java/ruby versions · time
-- Colors come from `scripts/tide/<name>.fish`, run once by install.sh after fisher installs tide
+- Prompt style: Lean, Classic, Rainbow, or Powerline
+- Character set: Unicode or ASCII-only
+- Prompt color: True color or 256-color
+- Spacing: Compact or Sparse
+- Icons: many icons or few
+- Prompt height: one line or two lines
+- Left/right frame: enabled or bordered
+- Transient prompt: on or off
+
+Whatever you pick, it uses the colors from your installed theme.
 
 **Plugins** (managed by fisher, listed in `fish_plugins`):
 
@@ -192,7 +208,7 @@ Runs automatically at the end of `fish_greeting` (every new interactive shell) i
 | `done` notifications | macOS Notification Center | `notify-send` / libnotify |
 | `macos_*` kitty options | active | silently ignored |
 | Keybindings | ⌘ | Super key + extra `ctrl+shift+c/v` |
-| Tide theme | universal vars in `fish_variables` | restored by `scripts/tide/<name>.fish` (fisher does **not** sync these) |
+| Tide prompt layout | set via `tide configure` | same — run `fish -c 'tide configure'` on either OS |
 
 ---
 
@@ -218,7 +234,7 @@ mkdir -p ~/.config/fastfetch
 cp "fastfetch/$THEME.jsonc" ~/.config/fastfetch/config.jsonc
 
 fish -c 'curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher update'
-fish "scripts/tide/$THEME.fish"
+fish -c 'tide configure'   # walks you through prompt style interactively
 
 # set fish as default shell
 echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
@@ -231,17 +247,17 @@ chsh -s /opt/homebrew/bin/fish
 
 **Icons show as boxes/question marks** — the Nerd Font isn't active. Run `fc-cache -f`, restart kitty, and confirm `kitty +list-fonts | grep -i jetbrains` shows the font.
 
-**Prompt looks plain / custom prompt missing** — tide didn't install or its theme didn't apply. Fix from inside fish (swap in whichever theme you're using):
+**Prompt looks plain / custom prompt missing** — tide didn't install or hasn't been configured yet. Fix from inside fish:
 
 ```fish
 fisher install ilancosman/tide@v6
-curl -fsSL https://raw.githubusercontent.com/iancrowder23-ship-it/fish-dotfiles/main/scripts/tide/graphite-emerald.fish | fish
+tide configure
 exec fish
 ```
 
 Check `fisher list` to see which plugins are actually installed.
 
-**Prompt path truncation throws `string shorten: unknown option`** — this was a bug in an earlier version where `tide_git_truncation_strategy` held a literal `…` character instead of an empty string. Fixed in `scripts/tide/*.fish` — re-run the tide theme script above to pick up the fix.
+**Want to change your prompt style/layout later** — just run `fish -c 'tide configure'` again anytime; it overwrites your previous answers.
 
 **`done` notifications don't appear** — you need a notification daemon (`dunst`, `mako`, or your DE's built-in). `libnotify` only provides the client side.
 
@@ -261,4 +277,4 @@ Configs changed on one machine? Commit + push, then on the other machine:
 cd ~/.local/share/fish-dotfiles && git pull && ./install.sh
 ```
 
-The installer is idempotent — safe to re-run any time, including just to switch themes.
+The installer is idempotent — safe to re-run any time, including just to switch color themes (`--no-plugins --no-shell-change` skips re-running the prompt wizard and shell change).

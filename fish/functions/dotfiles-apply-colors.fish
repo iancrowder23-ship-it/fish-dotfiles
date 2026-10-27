@@ -79,6 +79,7 @@ function dotfiles-apply-colors --description 'Sync starship, fastfetch and fish 
         set -l surface2 (__dotfiles_mix $kc_background $kc_foreground 0.22)
         string replace -r '^accent = .*'        "accent = \"#$accent_hex\"" <$cfg \
             | string replace -r '^accent_bright = .*' "accent_bright = \"#$bright_hex\"" \
+            | string replace -r '^on_accent = .*'     "on_accent = \"#$kc_background\"" \
             | string replace -r '^chip = .*'          "chip = \"#$chip\"" \
             | string replace -r '^surface = .*'       "surface = \"#$surface\"" \
             | string replace -r '^surface2 = .*'      "surface2 = \"#$surface2\"" >$cfg.tmp

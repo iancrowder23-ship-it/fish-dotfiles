@@ -21,16 +21,9 @@ function _cursor_preexec --on-event fish_preexec
     printf '\e[2 q'   # steady block — command is running
 end
 
-# ── After command: flash exit status then restore cursor ───────
+# ── After command: restore the blinking beam ───────────────────
+# (Failures show in the prompt via starship's status module)
 function _cursor_postexec --on-event fish_postexec
-    set -l code $status  # capture immediately — only $argv[1] (cmd text) is passed
-
-    if test $code -eq 0
-        printf '%s ✓%s\n' (set_color -o brgreen) (set_color normal)
-    else
-        printf '%s ✗  exit %s%s\n' (set_color -o brred) $code (set_color normal)
-    end
-
     printf '\e[5 q'
 end
 

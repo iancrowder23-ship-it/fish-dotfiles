@@ -32,32 +32,32 @@
         },
         {
             "type": "os",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}{icon}{#}{#38;2;@CHIP@}{#}",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} {icon} {#}{#38;2;@CHIP@}{#}",
             "format": "{pretty-name}"
         },
         {
             "type": "kernel",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰌢{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰌢 {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "uptime",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰅐{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰅐 {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "packages",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰏖{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰏖 {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "wm",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰖭{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰖭 {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "shell",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}  {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "terminal",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}  {#}{#38;2;@CHIP@}{#}"
         },
         "break",
         {
@@ -66,30 +66,30 @@
         },
         {
             "type": "cpu",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰻠{#}{#38;2;@CHIP@}{#}",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰻠 {#}{#38;2;@CHIP@}{#}",
             "format": "{name}"
         },
         {
             "type": "gpu",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰍛{#}{#38;2;@CHIP@}{#}",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰍛 {#}{#38;2;@CHIP@}{#}",
             "format": "{name}"
         },
         {
             "type": "memory",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰘚{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰘚 {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "disk",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰋊{#}{#38;2;@CHIP@}{#}",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰋊 {#}{#38;2;@CHIP@}{#}",
             "folders": "/"
         },
         {
             "type": "battery",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰁹{#}{#38;2;@CHIP@}{#}"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰁹 {#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "localip",
-            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰩟{#}{#38;2;@CHIP@}{#}",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@} 󰩟 {#}{#38;2;@CHIP@}{#}",
             "compact": true
         },
         "break",

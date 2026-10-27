@@ -53,13 +53,13 @@ DMS only writes these files while it's on its dynamic (wallpaper) theme with the
 
 ## Prompt
 
-`~/.config/starship.toml` is a two-line Material-style prompt made of separate rounded pills: a tonal accent pill for OS + user (plus host over SSH and a key icon while sudo is cached), the directory with folder icons (󰋜 home, 󰈙 Documents, 󰲋 Coding, …), git branch/state/status/line counts, and toolchain versions. On the right: command duration, background jobs, low battery, the last exit code, and the time. Pills with nothing to show disappear. Every color comes from the `[palettes.dotfiles]` table at the bottom. Only that table gets rewritten when the theme syncs, so edit the layout freely ([config docs](https://starship.rs/config/)).
+`~/.config/starship.toml` is a two-line rounded powerline prompt built on Starship's official [`catppuccin-powerline`](https://starship.rs/presets/catppuccin-powerline) preset, recolored with a tonal ramp from your accent. On the left, a solid accent segment for OS + user (plus host over SSH and a key icon while sudo is cached) flows into a tonal segment with the directory and git branch/state/status/line counts. On the right: command duration, background jobs, low battery, the last exit code, then a pill with toolchain versions and the time. Every color comes from the `[palettes.dotfiles]` table at the bottom. Only that table gets rewritten when the theme syncs, so edit the layout freely ([config docs](https://starship.rs/config/)). Nerd Font glyphs in the file are written as `\uXXXX` escapes so editors can't strip them.
 
 To use one of Starship's presets instead, run `starship preset --list`, then `starship preset <name> -o ~/.config/starship.toml`. Presets have their own fixed colors, so `theme-pick` will leave the prompt alone after that. Re-run the installer to get the theme-following prompt back.
 
 ## What's included
 
-**fish** — `config.fish` (env, aliases, abbreviations), `conf.d/colors.fish` (syntax/git/greeting colors), `conf.d/animations.fish` (cursor morphs beam → underline → block on Enter; ✓ / ✗ exit flash after each command), `fish_greeting` (typewriter banner + fastfetch), `mkcd`, `reload`, `theme-pick`.
+**fish** — `config.fish` (env, aliases, abbreviations), `conf.d/colors.fish` (syntax/git/greeting colors), `conf.d/animations.fish` (cursor morphs beam → underline → block on Enter, back to a beam afterwards), `fish_greeting` (typewriter banner + fastfetch), `mkcd`, `reload`, `theme-pick`.
 
 **Plugins** (`fish_plugins`, managed by the `fisher` package): autopair · done (desktop notification for commands >5s) · puffer-fish.
 

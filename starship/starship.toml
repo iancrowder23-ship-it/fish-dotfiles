@@ -1,237 +1,141 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 # ══════════════════════════════════════════════════════════════
-#  starship.toml — Material-style pill prompt
-#  Each segment is its own rounded pill, and pills with nothing
-#  to show disappear. Colors come from [palettes.dotfiles] at the
-#  bottom. theme-pick (and a new shell after any kitty theme
-#  change) rewrites those values from the active kitty theme —
-#  edit the layout freely.
+#  starship.toml — rounded powerline prompt
+#  Built on Starship's official `catppuccin-powerline` preset
+#  (`starship preset catppuccin-powerline`), recolored with a
+#  tonal ramp from the theme accent:
+#
+#     ( 󰣇 ianc  ~/Coding  main 󰏫 1 )             󱘗 1.80  󰥔 22:38 )
+#     ❯
+#
+#  Colors come from [palettes.dotfiles] at the bottom; theme-pick
+#  (and any kitty/DMS theme change) rewrites those values.
+#
+#  Nerd Font glyphs are written as \u escapes (TOML basic strings
+#  only, never '...') so editors and tools can't silently strip
+#  the private-use characters. Handy ones:
+#      left round cap       right round cap
+#      thin round divider
 # ══════════════════════════════════════════════════════════════
 
 palette = "dotfiles"
 add_newline = true
 
+# Left: identity (solid accent) flowing into path + git (tonal).
+# Right: status text, then one pill for toolchains + clock.
 format = """
-[](fg:chip)$os$username$hostname$sudo[](fg:chip) \
-[](fg:surface)$directory[](fg:surface) \
-([](fg:surface)$git_branch$git_commit$git_state$git_status$git_metrics[](fg:surface) )\
-([](fg:surface2)\
-$c$cpp$rust$golang$zig$nodejs$bun$deno$python$conda$java$kotlin$lua$ruby$php$dotnet$package$nix_shell$docker_context\
-[](fg:surface2))\
+[](fg:accent)\
+$os$username$hostname$sudo\
+[](fg:accent bg:chip)\
+$directory\
+$git_branch$git_commit$git_state$git_status$git_metrics\
+[](fg:chip)\
 $fill\
-$cmd_duration\
-$jobs\
-$battery\
-$status\
-([](fg:surface)$time[](fg:surface))\
+$cmd_duration$jobs$battery$status\
+[](fg:surface)\
+$c$cpp$rust$golang$zig$nodejs$bun$deno$python$conda$java$kotlin$lua$ruby$php$dotnet$nix_shell$docker_context\
+$time\
+[](fg:surface)\
 $line_break\
 $character"""
 
-# ── Identity pill (tonal accent) ───────────────────────────────
+continuation_prompt = "[∙∙ ](fg:bright-black)"
+
+# ── Identity (solid accent) ────────────────────────────────────
 [os]
 disabled = false
-style = "bg:chip fg:accent_bright"
-format = "[$symbol ]($style)"
+style = "bg:accent fg:on_accent"
+format = "[ $symbol ]($style)"
 
 [os.symbols]
-Arch = "󰣇"
-EndeavourOS = ""
-Manjaro = ""
-CachyOS = "󰣇"
-Linux = ""
+Arch = "\U000F08C7"
+Artix = "\U000F08C7"
+CachyOS = ""
+EndeavourOS = ""
+Manjaro = ""
+Linux = ""
 
 [username]
 show_always = true
-style_user = "bg:chip fg:accent_bright bold"
-style_root = "bg:chip fg:red bold"
-format = "[$user]($style)"
+style_user = "bg:accent fg:on_accent bold"
+style_root = "bg:red fg:on_accent bold"
+format = "[$user ]($style)"
 
 [hostname]
 ssh_only = true
-ssh_symbol = "󰒋 "
-style = "bg:chip fg:accent_bright"
-format = "[ 󰁥 $ssh_symbol$hostname]($style)"
+ssh_symbol = "\U000F048B "
+style = "bg:accent fg:on_accent"
+format = "[@ $ssh_symbol$hostname ]($style)"
 
 [sudo]
 disabled = false
-symbol = " 󰌋"
-style = "bg:chip fg:yellow"
+symbol = "\U000F030B "
+style = "bg:accent fg:on_accent"
 format = "[$symbol]($style)"
 
-# ── Directory pill ─────────────────────────────────────────────
+# ── Path + git (tonal container) ───────────────────────────────
 [directory]
-style = "bg:surface fg:accent_bright"
-read_only_style = "bg:surface fg:red"
-format = "[$path]($style)[$read_only]($read_only_style)"
-read_only = " 󰌾"
-home_symbol = "󰋜"
+style = "bg:chip fg:accent_bright bold"
+read_only_style = "bg:chip fg:red"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+read_only = "\U000F033E "
 truncation_length = 3
 truncation_symbol = "…/"
 
-[directory.substitutions]
-"Documents" = "󰈙"
-"Downloads" = ""
-"Music" = "󰝚"
-"Pictures" = ""
-"Videos" = "󰕧"
-"Desktop" = "󰇄"
-"Coding" = "󰲋"
-"Projects" = "󰲋"
-".config" = ""
-
-# ── Git pill ───────────────────────────────────────────────────
 [git_branch]
-symbol = ""
-style = "bg:surface fg:accent"
-format = "[$symbol $branch]($style)"
+symbol = ""
+style = "bg:chip fg:accent"
+format = "[ $symbol $branch ]($style)"
 
 [git_commit]
 tag_disabled = false
-tag_symbol = " 󰓹 "
-style = "bg:surface fg:accent"
-format = "[ 󰜘 $hash$tag]($style)"
+tag_symbol = " \U000F04F9 "
+style = "bg:chip fg:accent"
+format = "[ \U000F0718 $hash$tag ]($style)"
 
 [git_state]
-style = "bg:surface fg:yellow"
-format = "[ 󰘬 $state( $progress_current/$progress_total)]($style)"
+style = "bg:chip fg:yellow"
+format = "[$state( $progress_current/$progress_total) ]($style)"
 
 [git_status]
-style = "bg:surface fg:accent_bright"
+style = "bg:chip fg:accent_bright"
 format = "([$all_status$ahead_behind]($style))"
-conflicted = " 󰞇"
-ahead = " 󰁝$count"
-behind = " 󰁅$count"
-diverged = " 󰹹 󰁝$ahead_count󰁅$behind_count"
-up_to_date = " 󰅠"
-untracked = " 󰋗 $count"
-stashed = " 󰏗 $count"
-modified = " 󰏫 $count"
-staged = " 󰐕 $count"
-renamed = " 󰑕 $count"
-deleted = " 󰆴 $count"
+conflicted = "\U000F0787 "
+ahead = "\U000F005D$count "
+behind = "\U000F0045$count "
+diverged = "\U000F005D$ahead_count \U000F0045$behind_count "
+untracked = "?$count "
+stashed = "\U000F01C4 $count "
+modified = "\U000F03EB $count "
+staged = "+$count "
+renamed = "\U000F0455 $count "
+deleted = "\U000F01B4 $count "
 
 [git_metrics]
 disabled = false
-added_style = "bg:surface fg:green"
-deleted_style = "bg:surface fg:red"
-format = "([ +$added]($added_style))([ -$deleted]($deleted_style))"
+added_style = "bg:chip fg:green"
+deleted_style = "bg:chip fg:red"
+format = "([+$added ]($added_style))([-$deleted ]($deleted_style))"
 
-# ── Toolchain pill ─────────────────────────────────────────────
-[c]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[cpp]
-disabled = false
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[rust]
-symbol = "󱘗"
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[golang]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[zig]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[nodejs]
-symbol = "󰎙"
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[bun]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[deno]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[python]
-symbol = "󰌠"
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version)( \\($virtualenv\\)) ]($style)"
-
-[conda]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol $environment ]($style)"
-
-[java]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[kotlin]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[lua]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[ruby]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[php]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[dotnet]
-symbol = "󰪮"
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol( $version) ]($style)"
-
-[package]
-symbol = "󰏗"
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol $version ]($style)"
-
-[nix_shell]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol $state ]($style)"
-
-[docker_context]
-symbol = ""
-style = "bg:surface2 fg:accent_bright"
-format = "[ $symbol $context ]($style)"
-
-# ── Right side ─────────────────────────────────────────────────
+# ── Right side: plain status text ──────────────────────────────
 [fill]
 symbol = " "
 
 [cmd_duration]
 min_time = 2000
 style = "fg:bright-black"
-format = "[󱦟 $duration ]($style)"
+format = "[\U000F199F $duration ]($style)"
 
 [jobs]
-symbol = "󰜎 "
+symbol = "\U000F070E "
 style = "fg:accent"
 format = "[$symbol$number ]($style)"
 
 [battery]
 format = "[$symbol$percentage ]($style)"
-full_symbol = "󰁹 "
-charging_symbol = "󰂄 "
-discharging_symbol = "󰂃 "
+full_symbol = "\U000F0079 "
+charging_symbol = "\U000F0084 "
+discharging_symbol = "\U000F0083 "
 
 [[battery.display]]
 threshold = 20
@@ -239,32 +143,127 @@ style = "fg:red"
 
 [status]
 disabled = false
-symbol = "󰅙 "
-not_executable_symbol = "󰂭 "
-not_found_symbol = "󰍉 "
-sigint_symbol = "󰟾 "
-signal_symbol = "󱐋 "
+symbol = "\U000F0159 "
+not_executable_symbol = "\U000F0B6D "
+not_found_symbol = "\U000F0349 "
+sigint_symbol = "\U000F07FE "
+signal_symbol = "\U000F140B "
 style = "fg:red"
 format = "[$symbol$status ]($style)"
+
+# ── Right pill: toolchains + clock ─────────────────────────────
+[c]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[cpp]
+disabled = false
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[rust]
+symbol = "\U000F1617"
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[golang]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[zig]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[nodejs]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[bun]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[deno]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[python]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version)( \\($virtualenv\\)) ]($style)"
+
+[conda]
+symbol = "\U000F10D2"
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol $environment ]($style)"
+
+[java]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[kotlin]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[lua]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[ruby]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[php]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[dotnet]
+symbol = "\U000F0AAE"
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol( $version) ]($style)"
+
+[nix_shell]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol $state ]($style)"
+
+[docker_context]
+symbol = ""
+style = "bg:surface fg:accent_bright"
+format = "[ $symbol $context ]($style)"
 
 [time]
 disabled = false
 time_format = "%H:%M"
 style = "bg:surface fg:accent"
-format = "[󰥔 $time]($style)"
+format = "[ \U000F0954 $time ]($style)"
 
+# ── Input line ─────────────────────────────────────────────────
 [character]
-success_symbol = "[󰅂](bold fg:accent)"
-error_symbol = "[󰅂](bold fg:red)"
-vimcmd_symbol = "[󰅁](bold fg:accent)"
+success_symbol = "[❯](bold fg:accent)"
+error_symbol = "[❯](bold fg:red)"
+vimcmd_symbol = "[❮](bold fg:accent)"
 
 # Overwritten with hex values read from the kitty theme:
-# accent = theme color for $dotfiles_accent, chip = accent blended
-# into the background (tonal container), surfaces = background
-# blended toward foreground. The names below are only first-run defaults.
+# accent = theme color for $dotfiles_accent, on_accent = theme
+# background (text on the accent), chip = accent blended into the
+# background (tonal container), surface = background blended toward
+# foreground. The names below are only first-run defaults.
 [palettes.dotfiles]
 accent = "green"
 accent_bright = "bright-green"
+on_accent = "black"
 chip = "black"
 surface = "black"
 surface2 = "bright-black"

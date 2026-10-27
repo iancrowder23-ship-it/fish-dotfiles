@@ -10,7 +10,7 @@ function fish_greeting
         set accent $colors[1]
     end
 
-    set -l msg "  ❯ Welcome back, Ian ❯  "
+    set -l msg "  Welcome back, Ian"
     set -l len (string length $msg)
 
     for i in (seq $len)
@@ -20,15 +20,6 @@ function fish_greeting
         sleep 0.012
     end
     printf "%s\n" (set_color normal)
-
-    # Version info in the theme's accent color
-    set -l kitty_ver (kitty --version 2>/dev/null | string match -r '\d+\.\d+\.\d+' | head -1)
-    set -l fish_ver  (string match -r '\d+\.\d+\.\d+' -- $version)
-    printf "%s  kitty %s  •  fish %s%s\n" \
-        (set_color $accent) \
-        $kitty_ver \
-        $fish_ver \
-        (set_color normal)
 
     # ── fastfetch on every new shell ───────────────────────────
     # The logo tile is a kitty graphics image; anywhere else (tmux,

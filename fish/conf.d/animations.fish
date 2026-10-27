@@ -3,12 +3,16 @@
 #  Event handlers MUST live here, not in functions/, to register
 # ══════════════════════════════════════════════════════════════
 
+# Only in interactive shells — otherwise the escape codes below
+# leak into the output of every `fish -c` / script run
+status is-interactive; or return
+
 # ── Default cursor: blinking beam ─────────────────────────────
 printf '\e[5 q'
 
 # ── On Enter: cursor morphs beam → underline → block ──────────
 # The visual "click" feeling — cursor locks into a block while
-# the command runs, exactly like popular Arch fish dotfiles
+# the command runs
 function _cursor_preexec --on-event fish_preexec
     printf '\e[6 q'   # steady beam
     sleep 0.04
@@ -30,7 +34,4 @@ function _cursor_postexec --on-event fish_postexec
     printf '\e[5 q'
 end
 
-# ── Syntax highlighting / colors ────────────────────────────────
-# Colors live in fish/themes/<name>.fish (deployed as
-# conf.d/00-theme.fish by install.sh, loads before this file).
-# See that file for fish_color_*, git-prompt, and greeting colors.
+# Syntax highlighting colors live in conf.d/colors.fish

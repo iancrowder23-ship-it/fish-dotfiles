@@ -1,0 +1,126 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+# ══════════════════════════════════════════════════════════════
+#  starship.toml — rounded powerline prompt
+#  Colors come from [palettes.dotfiles] at the bottom. theme-pick
+#  (and a new shell after any kitty theme change) rewrites those
+#  values from the active kitty theme — edit the layout freely.
+# ══════════════════════════════════════════════════════════════
+
+palette = "dotfiles"
+add_newline = true
+
+format = """
+[](fg:surface)\
+$os\
+$username\
+[](fg:surface bg:surface2)\
+$directory\
+[](fg:surface2 bg:surface)\
+$git_branch\
+$git_status\
+[](fg:surface bg:surface2)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$python\
+$java\
+$docker_context\
+[](fg:surface2)\
+$fill\
+$cmd_duration\
+$jobs\
+$line_break\
+$character"""
+
+[os]
+disabled = false
+style = "bg:surface fg:accent"
+format = "[$symbol ]($style)"
+
+[os.symbols]
+Arch = "󰣇"
+Linux = ""
+
+[username]
+show_always = true
+style_user = "bg:surface fg:accent"
+style_root = "bg:surface fg:red"
+format = "[$user ]($style)"
+
+[directory]
+style = "bg:surface2 fg:accent_bright"
+read_only_style = "bg:surface2 fg:red"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+read_only = "󰌾 "
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = ""
+style = "bg:surface fg:accent"
+format = "[ $symbol $branch ]($style)"
+
+[git_status]
+style = "bg:surface fg:accent"
+format = "[($all_status$ahead_behind )]($style)"
+
+[c]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $version) ]($style)"
+
+[rust]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $version) ]($style)"
+
+[golang]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $version) ]($style)"
+
+[nodejs]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $version) ]($style)"
+
+[python]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $version)( \\($virtualenv\\)) ]($style)"
+
+[java]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $version) ]($style)"
+
+[docker_context]
+symbol = ""
+style = "bg:surface2 fg:accent"
+format = "[ $symbol( $context) ]($style)"
+
+[fill]
+symbol = " "
+
+[cmd_duration]
+min_time = 2000
+style = "fg:bright-black"
+format = "[ 󱦟 $duration ]($style)"
+
+[jobs]
+style = "fg:accent"
+format = "[ $symbol$number ]($style)"
+
+[character]
+success_symbol = "[❯](bold fg:accent)"
+error_symbol = "[❯](bold fg:red)"
+
+# Overwritten with hex values read from the kitty theme:
+# accent = theme color for $dotfiles_accent, surfaces = background
+# blended toward foreground. The names below are only first-run defaults.
+[palettes.dotfiles]
+accent = "green"
+accent_bright = "bright-green"
+surface = "black"
+surface2 = "bright-black"

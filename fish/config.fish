@@ -5,12 +5,7 @@ if status is-interactive
     set -g __done_notification_urgency_level normal
 
     # ── Path ──────────────────────────────────────────────────
-    # Homebrew (macOS only — dirs don't exist on Linux)
-    if test -d /opt/homebrew/bin
-        fish_add_path /opt/homebrew/bin
-        fish_add_path /opt/homebrew/sbin
-    end
-    # User-local bins (Linux/Arch)
+    # User-local bins
     if test -d ~/.local/bin
         fish_add_path ~/.local/bin
     end
@@ -29,9 +24,8 @@ if status is-interactive
     set -g __fish_git_prompt_showstashstate          1
     set -g __fish_git_prompt_showupstream            informative
 
-    # Git prompt colors — set by the active theme in
-    # conf.d/00-theme.fish (see fish/themes/<name>.fish). Sensible
-    # fallback here in case the theme file wasn't deployed.
+    # Git prompt colors — set from the accent in conf.d/colors.fish.
+    # Fallback here in case that file wasn't deployed.
     if not set -q __fish_git_prompt_color_branch
         set -g __fish_git_prompt_color_branch          brmagenta
         set -g __fish_git_prompt_color_upstream_ahead  brgreen
@@ -59,7 +53,7 @@ if status is-interactive
         alias l    'eza --long --all --header --icons --no-permissions --no-time --no-user --no-filesize --group-directories-first'
         alias ll   'eza -lagh --icons --group-directories-first'
         alias la   'eza -lagh --icons --group-directories-first --sort modified'
-        alias tree 'eza -Ta --icons --ignore-glob="node_modules|.git|.DS_Store"'
+        alias tree 'eza -Ta --icons --ignore-glob="node_modules|.git"'
     else
         alias ls   'ls -la'
         alias l    'ls -lah'
@@ -74,8 +68,8 @@ if status is-interactive
 
     # Colorize grep
     alias grep  'grep --color=auto'
-    alias egrep 'egrep --color=auto'
-    alias fgrep 'fgrep --color=auto'
+    alias egrep 'grep -E --color=auto'
+    alias fgrep 'grep -F --color=auto'
 
     # Navigation
     alias ..    'cd ..'
@@ -92,16 +86,9 @@ if status is-interactive
     alias gd  'git diff'
     alias gl  'git log --oneline --graph --decorate --color'
 
-    # Network — OS-specific
-    # (on Linux, `ip` is NOT aliased so iproute2 keeps working)
+    # Network (`ip` itself is left alone so iproute2 keeps working)
     alias myip 'dig +short myip.opendns.com @resolver1.opendns.com'
-    switch (uname)
-        case Darwin
-            alias ip  'dig +short myip.opendns.com @resolver1.opendns.com'
-            alias ipl 'ipconfig getifaddr en0'
-        case Linux
-            alias ipl "ip -4 -o addr show scope global | awk '{print \$4}' | cut -d/ -f1"
-    end
+    alias ipl  "ip -4 -o addr show scope global | awk '{print \$4}' | cut -d/ -f1"
 
     # ── Abbreviations (expand inline as you type) ─────────────
     abbr -a mk  mkdir -p
@@ -113,5 +100,9 @@ if status is-interactive
     abbr -a nd  npm run dev
     abbr -a nb  npm run build
 
+    # ── Prompt (keep last) ────────────────────────────────────
+    if command -q starship
+        starship init fish | source
+    end
 
 end

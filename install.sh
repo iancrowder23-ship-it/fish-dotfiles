@@ -18,6 +18,8 @@ Usage: install.sh [options]
       --theme <name>    kitty theme name for non-interactive runs
                         (e.g. "Tokyo Night"; see `kitten themes`)
       --accent <color>  red | green | yellow | blue | magenta | cyan
+      --dms             follow DankMaterialShell's wallpaper colors
+                        instead of a kitty theme
       --no-fastfetch    don't install/run fastfetch
       --no-plugins      skip fisher + plugins (autopair, done, puffer-fish)
       --no-shell-change don't chsh to fish
@@ -59,6 +61,7 @@ ask_yn() {
 ASSUME_YES=0
 THEME=""
 ACCENT=""
+DO_DMS=0
 DO_FASTFETCH=1
 DO_PLUGINS=1
 DO_SHELL_CHANGE=1
@@ -68,6 +71,7 @@ while [[ $# -gt 0 ]]; do
         -y|--yes)          ASSUME_YES=1; shift ;;
         --theme)           [[ $# -ge 2 ]] || die "--theme needs a value"; THEME="$2"; shift 2 ;;
         --accent)          [[ $# -ge 2 ]] || die "--accent needs a value"; ACCENT="$2"; shift 2 ;;
+        --dms)             DO_DMS=1; shift ;;
         --no-fastfetch)    DO_FASTFETCH=0; shift ;;
         --no-plugins)      DO_PLUGINS=0; shift ;;
         --no-shell-change) DO_SHELL_CHANGE=0; shift ;;
@@ -96,13 +100,16 @@ if [[ $INTERACTIVE -eq 1 ]]; then
     ask_yn "Install fastfetch and run it on every new shell?" y && DO_FASTFETCH=1 || DO_FASTFETCH=0
     ask_yn "Install fisher + plugins (autopair, done, puffer-fish)?" y && DO_PLUGINS=1 || DO_PLUGINS=0
     ask_yn "Set fish as your default login shell?" y && DO_SHELL_CHANGE=1 || DO_SHELL_CHANGE=0
+    if [[ $DO_DMS -eq 0 && -f "$HOME/.config/kitty/dank-theme.conf" && -z "$THEME" ]]; then
+        ask_yn "DankMaterialShell detected — follow its wallpaper colors instead of a kitty theme?" y && DO_DMS=1
+    fi
 fi
 
 # ── 1. Packages ──────────────────────────────────────────────
 step "Installing packages"
 # bind → dig (myip alias) · libnotify → `done` plugin notifications
 PKGS=(kitty fish starship git curl eza bind libnotify ttf-jetbrains-mono-nerd noto-fonts-emoji)
-[[ $DO_FASTFETCH -eq 1 ]] && PKGS+=(fastfetch)
+[[ $DO_FASTFETCH -eq 1 ]] && PKGS+=(fastfetch librsvg)   # librsvg → rsvg-convert renders the logo tile
 [[ $DO_PLUGINS -eq 1 ]] && PKGS+=(fisher)   # packaged in extra; fish_plugins no longer lists fisher itself
 sudo pacman -S --needed --noconfirm "${PKGS[@]}" \
     || die "pacman failed — if it was a 404 your package database is stale: run 'sudo pacman -Syu' and retry."
@@ -176,7 +183,7 @@ fi
 
 if [[ $DO_FASTFETCH -eq 1 ]]; then
     mkdir -p "$HOME/.config/fastfetch"
-    cp "$SRC/fastfetch/config.jsonc.in" "$HOME/.config/fastfetch/config.jsonc.in"
+    cp "$SRC/fastfetch/config.jsonc.in" "$SRC/fastfetch/logo.svg.in" "$HOME/.config/fastfetch/"
     ok "fastfetch"
 fi
 
@@ -198,7 +205,11 @@ fi
 step "Colors"
 # Values go through the environment so fish never parses them as its own options
 export DOTFILES_THEME="$THEME" DOTFILES_ACCENT="$ACCENT"
-if [[ $INTERACTIVE -eq 1 || -n "$THEME" ]]; then
+if [[ $DO_DMS -eq 1 ]]; then
+    fish -c 'set -l a; test -n "$DOTFILES_ACCENT"; and set a --accent $DOTFILES_ACCENT
+             theme-pick --dms $a' </dev/null \
+        || warn "theme-pick --dms failed — is the kitty template enabled in DMS? Re-run anytime with: theme-pick --dms"
+elif [[ $INTERACTIVE -eq 1 || -n "$THEME" ]]; then
     [[ -z "$THEME$ACCENT" ]] && info "Opening kitty's theme browser — arrows to browse, Enter to pick, Esc to keep the current theme."
     PICK_IN=/dev/null
     [[ $INTERACTIVE -eq 1 ]] && PICK_IN=/dev/tty
@@ -206,8 +217,10 @@ if [[ $INTERACTIVE -eq 1 || -n "$THEME" ]]; then
              theme-pick $a $DOTFILES_THEME' <"$PICK_IN" \
         || warn "theme-pick failed — re-run anytime with: theme-pick"
 else
-    # -y without --theme: keep kitty's current theme, just apply the accent
-    fish -c 'set -U dotfiles_accent (string replace -r "^\$" green -- $DOTFILES_ACCENT)
+    # -y without --theme: keep kitty's current theme (or DMS mode) and
+    # the current accent unless --accent was given
+    fish -c 'test -n "$DOTFILES_ACCENT"; and set -U dotfiles_accent $DOTFILES_ACCENT
+             set -q dotfiles_accent[1]; or set -U dotfiles_accent green
              dotfiles-apply-colors' </dev/null
 fi
 ok "Colors applied"

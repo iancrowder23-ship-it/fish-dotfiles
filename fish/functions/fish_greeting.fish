@@ -31,7 +31,13 @@ function fish_greeting
         (set_color normal)
 
     # ── fastfetch on every new shell ───────────────────────────
+    # The logo tile is a kitty graphics image; anywhere else (tmux,
+    # TTY, other terminals) use fastfetch's small text Arch logo
     if command -q fastfetch
-        fastfetch
+        if test "$TERM" = xterm-kitty
+            fastfetch
+        else
+            fastfetch --logo-type builtin --logo arch_small
+        end
     end
 end

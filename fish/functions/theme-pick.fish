@@ -1,15 +1,41 @@
 function theme-pick --description 'Pick a kitty color theme + accent and recolor the whole setup'
-    argparse h/help 'a/accent=' -- $argv; or return
+    argparse h/help 'a/accent=' dms -- $argv; or return
 
     set -l accents red green yellow blue magenta cyan
 
     if set -q _flag_help
         echo 'Usage: theme-pick [--accent COLOR] [KITTY THEME NAME]'
+        echo '       theme-pick --dms'
         echo
         echo '  No theme name: opens kitty'"'"'s interactive theme browser'
         echo '                 (skipped when only --accent is given).'
         echo '  No --accent:   asks which theme color to use as the accent.'
+        echo '  --dms:         follow DankMaterialShell'"'"'s wallpaper colors;'
+        echo '                 the accent is the wallpaper'"'"'s Material primary.'
+        echo '                 Picking a kitty theme later switches back.'
         echo "  Accents: $accents"
+        return 0
+    end
+
+    set -l kdir ~/.config/kitty
+    set -q KITTY_CONFIG_DIRECTORY[1]; and set kdir $KITTY_CONFIG_DIRECTORY
+
+    # ── DankMaterialShell mode ────────────────────────────────────
+    # DMS regenerates dank-theme.conf (and dank-tabs.conf) from the
+    # wallpaper and reloads kitty itself; themes.conf just includes
+    # it, inside the same markers `kitten themes` replaces, so picking
+    # a regular theme later cleanly switches back.
+    if set -q _flag_dms
+        if not test -f $kdir/dank-theme.conf
+            echo "theme-pick: $kdir/dank-theme.conf not found — enable the kitty template in DMS (Settings → Theme) first" >&2
+            return 1
+        end
+        printf '%s\n' '# BEGIN_KITTY_THEME' '# DankMaterialShell (wallpaper colors)' \
+            'include dank-theme.conf' 'include dms-tab-colors.conf' '# END_KITTY_THEME' >$kdir/themes.conf
+        set -q _flag_accent; and set -U dotfiles_accent $_flag_accent
+        dotfiles-apply-colors
+        pkill -USR1 -x kitty   # reload config in every kitty window
+        echo 'Following DankMaterialShell wallpaper colors'
         return 0
     end
 

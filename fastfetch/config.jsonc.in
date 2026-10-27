@@ -1,111 +1,100 @@
 // fastfetch config template — rendered to ~/.config/fastfetch/config.jsonc
-// by dotfiles-apply-colors. Colors are ANSI SGR codes so they follow
-// the active kitty theme: @ACCENT@ = accent, @ACCENT2@ = bright accent.
+// by dotfiles-apply-colors. @...@ placeholders become "r;g;b" values read
+// from the active kitty theme: ACCENT / ON_CHIP = accent / bright accent,
+// CHIP = accent blended into the background (Material tonal container),
+// FG / MUTED = foreground / dimmed foreground. @LOGO@ becomes the rendered
+// logo.png tile, or the built-in small Arch logo if rsvg-convert is missing.
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-    "logo": {
-        "type": "small",
-        "color": {
-            "1": "@ACCENT@",
-            "2": "90"
-        },
-        "padding": {
-            "top": 1,
-            "left": 2
-        }
-    },
+    "logo": @LOGO@,
     "display": {
-        "separator": " ",
+        "separator": "  ",
         "color": {
-            "keys": "@ACCENT@",
-            "output": "default"
+            "keys": "38;2;@ACCENT@",
+            "output": "38;2;@FG@"
         },
         "constants": [
-            "───────────────────────"
+            "──────────────────────────────"
         ]
     },
     "modules": [
         {
-            "type": "custom",
-            "format": "┌{$1}┐",
-            "outputColor": "90"
+            "type": "title",
+            "format": "{#1;38;2;@ACCENT@}{user-name}{#}{#38;2;@MUTED@} at {#}{#1;38;2;@FG@}{host-name}{#}"
         },
         {
-            "type": "title",
-            "key": "│ 󰀄",
-            "keyColor": "@ACCENT@",
-            "format": "{user-name}@{host-name}"
+            "type": "custom",
+            "format": "{#38;2;@MUTED@}{$1}{#}"
+        },
+        {
+            "type": "custom",
+            "format": "{#1;38;2;@ACCENT@}System{#}"
         },
         {
             "type": "os",
-            "key": "│ {icon}",
-            "keyColor": "@ACCENT@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}{icon}{#}{#38;2;@CHIP@}{#}",
+            "format": "{pretty-name}"
         },
         {
             "type": "kernel",
-            "key": "│ 󰌢",
-            "keyColor": "@ACCENT@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰌢{#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "uptime",
-            "key": "│ 󰅐",
-            "keyColor": "@ACCENT@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰅐{#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "packages",
-            "key": "│ 󰏖",
-            "keyColor": "@ACCENT@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰏖{#}{#38;2;@CHIP@}{#}"
         },
         {
-            "type": "custom",
-            "format": "├{$1}┤",
-            "outputColor": "90"
+            "type": "wm",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰖭{#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "shell",
-            "key": "│ ",
-            "keyColor": "@ACCENT2@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}{#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "terminal",
-            "key": "│ ",
-            "keyColor": "@ACCENT2@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}{#}{#38;2;@CHIP@}{#}"
+        },
+        "break",
+        {
+            "type": "custom",
+            "format": "{#1;38;2;@ACCENT@}Hardware{#}"
         },
         {
             "type": "cpu",
-            "key": "│ 󰻠",
-            "keyColor": "@ACCENT2@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰻠{#}{#38;2;@CHIP@}{#}",
+            "format": "{name}"
         },
         {
             "type": "gpu",
-            "key": "│ 󰍛",
-            "keyColor": "@ACCENT2@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰍛{#}{#38;2;@CHIP@}{#}",
+            "format": "{name}"
         },
         {
             "type": "memory",
-            "key": "│ 󰑭",
-            "keyColor": "@ACCENT2@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰘚{#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "disk",
-            "key": "│ 󰋊",
-            "keyColor": "@ACCENT2@"
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰋊{#}{#38;2;@CHIP@}{#}",
+            "folders": "/"
+        },
+        {
+            "type": "battery",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰁹{#}{#38;2;@CHIP@}{#}"
         },
         {
             "type": "localip",
-            "key": "│ 󰩟",
-            "keyColor": "@ACCENT2@",
+            "key": "{#38;2;@CHIP@}{#48;2;@CHIP@;38;2;@ON_CHIP@}󰩟{#}{#38;2;@CHIP@}{#}",
             "compact": true
-        },
-        {
-            "type": "custom",
-            "format": "└{$1}┘",
-            "outputColor": "90"
         },
         "break",
         {
             "type": "colors",
-            "paddingLeft": 2,
             "symbol": "circle"
         }
     ]

@@ -1,0 +1,23 @@
+<!-- Arch logo tile — rendered to ~/.config/fastfetch/logo.png by
+     dotfiles-apply-colors. Material-style tonal icon: @TILE@ is the
+     accent blended into the theme background, the glyph runs from
+     @TOP@ (bright accent) to @BOTTOM@ (accent). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#@TOP@"/>
+      <stop offset="1" stop-color="#@BOTTOM@"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="496" height="496" rx="140" fill="#@TILE@"/>
+  <path fill="url(#g)" d="M256 80
+    C262 94 268 108 274 122 L398 410
+    C401 418 396 424 388 420
+    C366 408 344 400 322 394
+    C310 352 290 322 256 320
+    C222 322 202 352 190 394
+    C168 400 146 408 124 420
+    C116 424 111 418 114 410 L238 122
+    C244 108 250 94 256 80 Z"/>
+  <path fill="#@TILE@" d="M110 312 C176 264 236 234 318 212 C254 244 200 290 120 372 Z"/>
+</svg>

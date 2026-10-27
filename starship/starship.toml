@@ -5,7 +5,7 @@
 #  (`starship preset catppuccin-powerline`), recolored with a
 #  tonal ramp from the theme accent:
 #
-#     ( 󰣇 ianc  ~/Coding  main 󰏫 1 )             󱘗 1.80  󰥔 22:38 )
+#     ( 󰣇 ianc  ~/Coding  main 󰏫 1 ) ··········· 󱘗 1.80  󰥔 22:38 )
 #     ❯
 #
 #  Colors come from [palettes.dotfiles] at the bottom; theme-pick
@@ -29,8 +29,8 @@ $os$username$hostname$sudo\
 [](fg:accent bg:chip)\
 $directory\
 $git_branch$git_commit$git_state$git_status$git_metrics\
-[](fg:chip)\
-$fill\
+[](fg:chip) \
+$fill \
 $cmd_duration$jobs$battery$status\
 [](fg:surface)\
 $c$cpp$rust$golang$zig$nodejs$bun$deno$python$conda$java$kotlin$lua$ruby$php$dotnet$nix_shell$docker_context\
@@ -118,8 +118,10 @@ deleted_style = "bg:chip fg:red"
 format = "([+$added ]($added_style))([-$deleted ]($deleted_style))"
 
 # ── Right side: plain status text ──────────────────────────────
+# Dotted leader joining the left and right pills.
 [fill]
-symbol = " "
+symbol = "\u00B7"
+style = "fg:surface2"
 
 [cmd_duration]
 min_time = 2000

@@ -10,7 +10,8 @@ function fish_greeting
         set accent $colors[1]
     end
 
-    set -l msg "  Welcome back, Ian"
+    # Greet whoever is logged in (`id -un` = the active account's username)
+    set -l msg "  Welcome back, "(id -un)
     set -l len (string length $msg)
 
     for i in (seq $len)

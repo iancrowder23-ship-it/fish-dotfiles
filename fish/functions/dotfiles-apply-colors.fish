@@ -83,7 +83,9 @@ function dotfiles-apply-colors --description 'Sync starship, fastfetch and fish 
             | string replace -r '^chip = .*'          "chip = \"#$chip\"" \
             | string replace -r '^surface = .*'       "surface = \"#$surface\"" \
             | string replace -r '^surface2 = .*'      "surface2 = \"#$surface2\"" >$cfg.tmp
-        and mv $cfg.tmp $cfg
+        # `command` skips the interactive `mv -i` alias from config.fish,
+        # which would otherwise ask to overwrite on every shell start.
+        and command mv -f $cfg.tmp $cfg
     end
 
     # ── fastfetch ─────────────────────────────────────────────────
